@@ -79,7 +79,18 @@ public class Bomb : MonoBehaviour
             }
 
         }
-        
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, bombSizes[level] + 1);
+            foreach (var hitCollider in hitColliders)
+            {
+                if (hitCollider.gameObject.tag == "Enemy")
+                {
+                    hitCollider.GetComponent<Enemy>().TouchedByBomb(0);
+                }
+                Destroy(gameObject);
+            }
+        }
     }
 
     void Combine()

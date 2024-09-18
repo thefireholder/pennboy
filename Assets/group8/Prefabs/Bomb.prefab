@@ -148,4 +148,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   childBomb: {fileID: 6597882995429004002}
   level: 0
-  newBombPosition: 0.5
+  newBombPositionParameter: 0.5
+  parentsLevel: -1

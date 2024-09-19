@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Anim;
 
 public class PressAnyBehavior : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class PressAnyBehavior : MonoBehaviour
     public Image keyBorder;
     public TMP_Text text;
     public List<GameObject> texts;
-    public RectTransform repeatingBg;
+    public GameObject repeatingBg;
 
     private float elapsed;
     private bool transitioned;
@@ -19,7 +21,7 @@ public class PressAnyBehavior : MonoBehaviour
     private void Update() {
         if (transitioned) return;
 
-        pressAny.alpha = 0.4f * Mathf.Cos(elapsed * 5f) + 0.6f;
+        pressAny.alpha = 0.4f * Mathf.Sin(elapsed * 5f) + 0.6f;
         elapsed += Time.deltaTime;
 
         if (Input.anyKey) {
@@ -28,68 +30,39 @@ public class PressAnyBehavior : MonoBehaviour
         }
     }
 
-    private IEnumerator ZoomOutBackground() {
-        var elapsedTime = 0f;
-        const float ANIM_TIME = 0.7f;
-
-        var initScale = repeatingBg.localScale;
-        var finalScale = new Vector3(1.5f, 1.5f, 1.5f);
-
-        while (elapsedTime <= ANIM_TIME) {
-            var t = elapsedTime / ANIM_TIME;
-            t = Easing.EaseInOutQuint(t);
-            repeatingBg.localScale = Vector3.Lerp(initScale, finalScale, t);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        repeatingBg.localScale = finalScale;
-    }
-
     private IEnumerator AnimateLogo() {
-        keyBorder.color = new Color(255f, 222f, 0f);
-        text.color = new Color(255f, 222f, 0f);
+        // Flash yellow
+        var flashColor = new Color(255f, 222f, 0f);
+        keyBorder.color = flashColor;
+        text.color = flashColor;
 
-        StartCoroutine(Fade());
-
-        var elapsedTime = 0f;
-        const float ANIM_TIME = 0.3f;
-
-        while (elapsedTime <= ANIM_TIME) {
-            var t = elapsedTime / ANIM_TIME;
-
-            foreach (var obj in texts) obj.GetComponent<CanvasGroup>().alpha = 1f - t;
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        foreach (var obj in texts) obj.GetComponent<CanvasGroup>().alpha = 0f;
-
-        StartCoroutine(ZoomOutBackground());
-
-        yield return new WaitForSeconds(0.35f);
-    }
-
-    private IEnumerator Fade() {
-        var elapsedTime = 0f;
-        const float ANIM_TIME = 1f;
-
-        var initCol = new Color(255f, 222f, 0f);
-
-        while (elapsedTime <= ANIM_TIME) {
-            var t = elapsedTime / ANIM_TIME;
-            var currCol = Color.Lerp(initCol, Color.white, t);
-
+        // Fade "Press any key..." text back to white after flashing to yellow
+        StartCoroutine(Animate(1f, t => {
+            var currCol = Color.Lerp(flashColor, Color.white, t);
             keyBorder.color = currCol;
             text.color = currCol;
+        }));
 
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
+        // Fade out all the text
+        var canvasGroups = texts.Select(obj => obj.GetComponent<CanvasGroup>());
+        StartCoroutine(Animate(0.3f, t => {
+            foreach (var canvasGroup in canvasGroups) canvasGroup.alpha = 1f - t;
+        }));
 
-        keyBorder.color = Color.white;
-        text.color = Color.white;
+        // Zoom out background
+        var rectTransform = repeatingBg.GetComponent<RectTransform>();
+        var initScale = rectTransform.localScale;
+        var finalScale = new Vector3(1.5f, 1.5f, 1.5f);
+        StartCoroutine(Animate(0.7f, t => {
+            t = Easing.EaseInOutQuint(t);
+            rectTransform.localScale = Vector3.Lerp(initScale, finalScale, t);
+        }));
+
+        yield return new WaitForSeconds(0.35f);
+
+        // Fade background to white
+        var bgImage = repeatingBg.GetComponent<Image>();
+        var initBgCol = bgImage.color;
+        StartCoroutine(Animate(0.3f, t => { bgImage.color = Color.Lerp(initBgCol, Color.white, t); }));
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthSafetyStart : MonoBehaviour
+public class HealthSafetyManager : MonoBehaviour
 {
     public List<GameObject> texts;
     public PressAnyKeyBehavior pressAny;
@@ -19,7 +19,7 @@ public class HealthSafetyStart : MonoBehaviour
     }
 
     private IEnumerator Start() {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
 
         var rectTransform = repeatingBg.GetComponent<RectTransform>();
         var initScale = rectTransform.localScale;

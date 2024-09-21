@@ -37,7 +37,6 @@ public class Enemy : MonoBehaviour
     }
 
 
-
     public void FlyAway()
     {
         // activated when affected by bomb; should pretty much fly away in death
@@ -47,9 +46,7 @@ public class Enemy : MonoBehaviour
         rb.isKinematic = false;
         rb.velocity = Random.onUnitSphere * flyLength;
         StartCoroutine(DelayedDeath(flyDuration));
-
     }
-
 
 
     public void RushToCenter()

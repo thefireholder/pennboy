@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Throw : MonoBehaviour
 {
 
@@ -25,6 +26,10 @@ public class Throw : MonoBehaviour
     [SerializeField]
     private float magnitude = 10;
 
+    private WaveManager waveManager;
+    [SerializeField]
+    private Phase currentPhase;
+
     // mouse drag information
     private Vector3 mouseStartPosition;
     private bool isDragging = false;
@@ -33,45 +38,53 @@ public class Throw : MonoBehaviour
     void Start()
     {
         mouseStartPosition = Input.mousePosition;
+
+        waveManager = FindObjectOfType<WaveManager>();
+        currentPhase = waveManager.currentPhase;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isDragging)
+        currentPhase = waveManager.currentPhase;
+        if (waveManager.currentPhase == Phase.PlayerPhase)
         {
-            angle = defaultAngle + (Input.mousePosition - mouseStartPosition).y / angleControlScale;
-            magnitude = defaultMagnitude + (Input.mousePosition - mouseStartPosition).y / magControlScale;
+            if (isDragging)
+            {
+                angle = defaultAngle + (Input.mousePosition - mouseStartPosition).y / angleControlScale;
+                magnitude = defaultMagnitude + (Input.mousePosition - mouseStartPosition).y / magControlScale;
+            }
+
+
+            Vector3 startPoint = transform.position;
+            Vector3 startVelocity = GetStartVelocity(angle, magnitude);
+
+            // Draw trajectory on game board
+            ShowTrajectoryLine(startPoint, startVelocity);
+
+            // if clicked
+            if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
+            {
+                mouseStartPosition = Input.mousePosition; // Store the starting position
+                isDragging = true;
+            }
+
+            // Detect mouse release (end of the drag)
+            if (Input.GetMouseButtonUp(0) && isDragging)
+            {
+                isDragging = false;
+
+                // Calculate and print the extent of the drag
+                Vector3 dragExtent = Input.mousePosition - mouseStartPosition;
+                // only care about y dimension
+                //Debug.Log("Drag extent: " + dragExtent);
+                //Debug.Log("Drag distance: " + dragExtent.magnitude); // Prints the length of the drag
+
+                // if right click, throw bomb
+                CreateBomb(startPoint, startVelocity);
+            }
         }
-            
 
-        Vector3 startPoint = transform.position;
-        Vector3 startVelocity = GetStartVelocity(angle, magnitude);
-
-        // Draw trajectory on game board
-        ShowTrajectoryLine(startPoint, startVelocity);
-
-        // if clicked
-        if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
-        {
-            mouseStartPosition = Input.mousePosition; // Store the starting position
-            isDragging = true;
-        }
-
-        // Detect mouse release (end of the drag)
-        if (Input.GetMouseButtonUp(0) && isDragging)
-        {
-            isDragging = false;
-
-            // Calculate and print the extent of the drag
-            Vector3 dragExtent = Input.mousePosition - mouseStartPosition;
-            // only care about y dimension
-            //Debug.Log("Drag extent: " + dragExtent);
-            //Debug.Log("Drag distance: " + dragExtent.magnitude); // Prints the length of the drag
-
-            // if right click, throw bomb
-            CreateBomb(startPoint, startVelocity);
-        }
     }
 
     Vector3 GetStartVelocity(float angle, float magnitude)

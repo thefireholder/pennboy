@@ -8,74 +8,109 @@ public class WaveManager : MonoBehaviour
 {
     [SerializeField]
     int waveNumber = 0;
+
+    public int maximumBomb = 10;
+    public bool RequirePressBarForNextPhase = false;
     
     private float playerPhaseLength = 5f;
-    private float bombPhaseLength = 5f;
+    private float bombPhaseLength = 15f;
     private float enemyPhaseLength = 5f;
+    private OutwardForce bombPushingObject;
+    private float phaseStartedAt;
 
     // during player phase, player plays combining game
     // during bombphase, bomb starts falling
     // during enemy phase, enemy starts climbing
 
-    public Phase currentPhase = Phase.BombPhaseEnded;
+    public Phase currentPhase = Phase.EnemyPhaseEnded;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        bombPushingObject = FindObjectOfType<OutwardForce>();
+        phaseStartedAt = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
+        float currentTime = Time.time;
+
         // Check if space is pressed and the object is not already moving
         switch (currentPhase)
         {
             case Phase.EnemyPhaseEnded:
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (!RequirePressBarForNextPhase || Input.GetKeyDown(KeyCode.Space))
                 {
-                    currentPhase = Phase.PlayerPhase;
-                    StartCoroutine(StartPlayerPhase());
+                    StartPlayerPhase();
                     
                 }
                 break;
             case Phase.PlayerPhaseEnded:
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (!RequirePressBarForNextPhase || Input.GetKeyDown(KeyCode.Space))
                 {
-                    currentPhase = Phase.BombPhase;
-                    StartCoroutine(StartBombPhase());
+                    StartBombPhase();
                 }
                 break;
             case Phase.BombPhaseEnded:
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (!RequirePressBarForNextPhase || Input.GetKeyDown(KeyCode.Space))
                 {
-                    currentPhase = Phase.EnemyPhase;
-                    StartCoroutine(StartEnemyPhase());
+                    StartEnemyPhase();
                 }
                 break;
         }
-        
+
+        // manually ending phase by condition
+        if (currentPhase == Phase.PlayerPhase)
+        {
+            int nBomb = GameObject.FindGameObjectsWithTag("Bomb").Length;
+            if (nBomb == maximumBomb)
+                endPhase(Phase.PlayerPhase, "Bomb exceeded Length (" + nBomb + "/" + maximumBomb +")");
+            else if (currentTime > phaseStartedAt + playerPhaseLength)
+                endPhase(Phase.PlayerPhase, "Time is up");
+        }
+        if (currentPhase == Phase.BombPhase)
+        {
+            if (currentTime > phaseStartedAt + bombPhaseLength)
+                endPhase(Phase.BombPhase, "Time is up");
+        }
+        if (currentPhase == Phase.EnemyPhase)
+        {
+            if (currentTime > phaseStartedAt + enemyPhaseLength)
+                endPhase(Phase.EnemyPhase, "Time is up");
+        }
+
+
     }
 
-    IEnumerator StartPlayerPhase()
+    void StartPlayerPhase()
     {
+        /* runs exactly once at the start of enemy phase */
+        currentPhase = Phase.PlayerPhase;
+        phaseStartedAt = Time.time;
         Debug.Log("Player Phase started");
-        yield return new WaitForSeconds(playerPhaseLength);
-        currentPhase = Phase.PlayerPhaseEnded;
-        Debug.Log("Player Phase ended");
     }
 
-    IEnumerator StartBombPhase()
+    void StartBombPhase()
     {
+        /* runs exactly once at the start of enemy phase */
+        currentPhase = Phase.BombPhase;
+        phaseStartedAt = Time.time;
         Debug.Log("Bomb Phase started");
-        yield return new WaitForSeconds(bombPhaseLength);
-        currentPhase = Phase.BombPhaseEnded;
-        Debug.Log("Bomb Phase ended");
+
+        // push bomnbs off
+        if (bombPushingObject != null)
+        {
+            bombPushingObject.pushBombsOff(bombPhaseLength/2);
+        }
     }
 
-    IEnumerator StartEnemyPhase()
+    void StartEnemyPhase()
     {
-        Debug.Log("Enmey Phase started");
+        /* runs exactly once at the start of enemy phase */
+        currentPhase = Phase.EnemyPhase;
+        phaseStartedAt = Time.time;
+        Debug.Log("Enemy Phase started");
 
         // increase your wave track
         waveNumber += 1;
@@ -88,11 +123,40 @@ public class WaveManager : MonoBehaviour
         }
 
         // spawn new enemy
+    }
 
-
-        // wait for certain seconds and change the state
-        yield return new WaitForSeconds(enemyPhaseLength);
-        currentPhase = Phase.EnemyPhaseEnded;
-        Debug.Log("Enmey Phase ended");
+    void endPhase(Phase phase, string why)
+    {
+        switch (phase)
+        {
+            case Phase.PlayerPhase:
+                if (currentPhase == Phase.PlayerPhaseEnded)
+                    Debug.Log("Player phase already ended, ignoring " + why);
+                else
+                {
+                    currentPhase = Phase.PlayerPhaseEnded;
+                    Debug.Log("Player phase ended " + why);
+                }
+                break;
+            case Phase.EnemyPhase:
+                if (currentPhase == Phase.EnemyPhaseEnded)
+                    Debug.Log("Enemy phase already ended, ignoring " + why);
+                else
+                {
+                    currentPhase = Phase.EnemyPhaseEnded;
+                    Debug.Log("Enemy phase ended " + why);
+                }
+                break;
+            case Phase.BombPhase:
+                if (currentPhase == Phase.BombPhaseEnded)
+                    Debug.Log("Bomb phase already ended, ignoring " + why);
+                else
+                {
+                    currentPhase = Phase.BombPhaseEnded;
+                    Debug.Log("Bomb phase ended " + why);
+                }
+                break;
+        }
+        
     }
 }

@@ -56,6 +56,8 @@ MonoBehaviour:
   magControlScale: 100
   angle: 30
   magnitude: 7
+  waveManager: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+    type: 3}
 --- !u!1001 &9180418672738848038
 PrefabInstance:
   m_ObjectHideFlags: 0

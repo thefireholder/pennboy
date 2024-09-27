@@ -7,7 +7,7 @@ public class OutwardForce : MonoBehaviour
     public Vector3 startPosition;   // The starting position
     public Vector3 endPosition;     // The end position
     public float duration = 10f;    // Duration of the movement in seconds
-    private bool isMoving = false;  // Track if the object is currently moving
+    public bool isMoving = false;  // Track if the object is currently moving
 
     // Start is called before the first frame update
     void Start()
@@ -18,11 +18,17 @@ public class OutwardForce : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check if space is pressed and the object is not already moving
-        if (Input.GetKeyDown(KeyCode.Space) && !isMoving)
-        {
-            StartCoroutine(MoveOverTime(startPosition, endPosition, duration));
-        }
+        //// Check if space is pressed and the object is not already moving
+        //if (Input.GetKeyDown(KeyCode.Space) && !isMoving)
+        //{
+        //    pushBombsOff();
+        //}
+    }
+
+    public void pushBombsOff(float _duration = -1)
+    {
+        if (_duration == -1) _duration = duration;
+        StartCoroutine(MoveOverTime(startPosition, endPosition, _duration));
     }
 
     // Coroutine to move the object from startPosition to endPosition over the given duration

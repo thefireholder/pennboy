@@ -6,9 +6,13 @@ using UnityEngine.UI;
 
 public class HealthSafetyManager : MonoBehaviour
 {
+    [Header("Background Canvas")] public GameObject repeatingBg;
+
+    [Header("Intro Canvas")] public GameObject intro;
     public List<GameObject> texts;
     public PressAnyKeyBehavior pressAny;
-    public GameObject repeatingBg;
+
+    [Header("Logo Sequence Canvas")] public GameObject logoSequence;
 
     private bool polling;
 
@@ -89,8 +93,11 @@ public class HealthSafetyManager : MonoBehaviour
         // Fade background to white
         var bgImage = repeatingBg.GetComponent<Image>();
         var initBgCol = bgImage.color;
-        StartCoroutine(Anim.Animate(0.3f, t => {
+        yield return Anim.Animate(0.3f, t => {
             bgImage.color = Color.Lerp(initBgCol, Color.white, t);
-        }));
+        });
+
+        intro.SetActive(false);
+        logoSequence.SetActive(true);
     }
 }

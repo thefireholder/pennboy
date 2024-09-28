@@ -24,6 +24,7 @@ public class RandomSpawner : MonoBehaviour
 
     public void Spawn()
     {
+        Debug.Log(numberOfObjects + " Enemy Spawned");
         Vector3[] spawnPositions = GenerateSpawnPositions(numberOfObjects);
         SpawnObjects(spawnPositions);
     }
@@ -62,6 +63,7 @@ public class RandomSpawner : MonoBehaviour
         {
             Vector3 position = transform.rotation * localPosition + transform.position;
             Instantiate(objectToSpawn, position, Quaternion.identity);
+            Debug.Log(position);
         }
     }
 }

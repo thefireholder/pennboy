@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+namespace PennBoy
+{
 public static class Easing
 {
     public static float EaseOutExpo(float t) {
@@ -20,4 +22,5 @@ public static class Easing
 
         return t < 0.5f ? Mathf.Pow(2, 20f * t - 10f) / 2f : (2f - Mathf.Pow(2, -20f * t + 10f)) / 2f;
     }
+}
 }

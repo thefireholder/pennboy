@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace PennBoy
+{
 public class HealthSafetyManager : MonoBehaviour
 {
     [Header("Background Canvas")] public GameObject repeatingBg;
@@ -143,4 +145,5 @@ public class HealthSafetyManager : MonoBehaviour
             upgradeCanvasGroup.alpha = t;
         });
     }
+}
 }

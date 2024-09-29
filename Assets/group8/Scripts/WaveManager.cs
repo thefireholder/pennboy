@@ -16,11 +16,13 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     int[] numberOfSpawnEnemy = {2,2,2,3,3,3,4,4,4,5,5,5};
 
-    private float playerPhaseLength = 5f;
+    private float playerPhaseLength = 15f;
     private float bombPhaseLength = 15f;
     private float enemyPhaseLength = 5f;
     private OutwardForce bombPushingObject;
     private SpawnSurface[] spawnEnemySurfaces;
+    private Throw hand;
+    private OverflowDetector overflowDetector;
     private float phaseStartedAt;
 
     // during player phase, player plays combining game
@@ -34,6 +36,8 @@ public class WaveManager : MonoBehaviour
     {
         bombPushingObject = FindObjectOfType<OutwardForce>();
         spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
+        hand = FindObjectOfType<Throw>();
+        overflowDetector = FindObjectOfType<OverflowDetector>();
         phaseStartedAt = Time.time;
     }
 
@@ -71,9 +75,22 @@ public class WaveManager : MonoBehaviour
         {
             int nBomb = GameObject.FindGameObjectsWithTag("Bomb").Length;
             if (nBomb == maximumBomb)
-                endPhase(Phase.PlayerPhase, "Bomb exceeded Length (" + nBomb + "/" + maximumBomb +")");
+            {
+                endPhase(Phase.PlayerPhase, "Bomb exceeded Length (" + nBomb + "/" + maximumBomb + ")");
+                /* needs to be called if terminate Detection no longer used */
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
             else if (currentTime > phaseStartedAt + playerPhaseLength)
+            {
                 endPhase(Phase.PlayerPhase, "Time is up");
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
+            else if (overflowDetector.BombOverflowDetected())
+            {
+                endPhase(Phase.PlayerPhase, "Overflow detected");
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
+
         }
         if (currentPhase == Phase.BombPhase)
         {
@@ -95,6 +112,12 @@ public class WaveManager : MonoBehaviour
         currentPhase = Phase.PlayerPhase;
         phaseStartedAt = Time.time;
         Debug.Log("Player Phase started");
+
+        // activate hand if it exists
+        if (hand != null) hand.activateHand(true);
+
+        // start bomb overflow detection
+        overflowDetector.InitiateDetection();
     }
 
     void StartBombPhase()
@@ -103,6 +126,9 @@ public class WaveManager : MonoBehaviour
         currentPhase = Phase.BombPhase;
         phaseStartedAt = Time.time;
         Debug.Log("Bomb Phase started");
+
+        // deactivate hand if it exists
+        if (hand != null) hand.activateHand(false);
 
         // push bomnbs off
         if (bombPushingObject != null)
@@ -117,6 +143,9 @@ public class WaveManager : MonoBehaviour
         currentPhase = Phase.EnemyPhase;
         phaseStartedAt = Time.time;
         Debug.Log("Enemy Phase started");
+
+        // deactivate hand if it exists
+        if (hand != null) hand.activateHand(false);
 
         // increase your wave track
         waveNumber += 1;

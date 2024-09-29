@@ -1076,7 +1076,7 @@ PrefabInstance:
     - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
         type: 3}
       propertyPath: currentPhase
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1433200371240593126, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
         type: 3}

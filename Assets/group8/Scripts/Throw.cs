@@ -26,9 +26,8 @@ public class Throw : MonoBehaviour
     [SerializeField]
     private float magnitude = 10;
 
-    private WaveManager waveManager;
     [SerializeField]
-    private Phase currentPhase;
+    private bool handActive; // turn this on to make the hand be able to throw bomb
 
     // mouse drag information
     private Vector3 mouseStartPosition;
@@ -38,16 +37,18 @@ public class Throw : MonoBehaviour
     void Start()
     {
         mouseStartPosition = Input.mousePosition;
+        handActive = true;
+    }
 
-        waveManager = FindObjectOfType<WaveManager>();
-        currentPhase = waveManager.currentPhase;
+    public void activateHand(bool activate)
+    {
+        handActive = activate;
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentPhase = waveManager.currentPhase;
-        if (waveManager.currentPhase == Phase.PlayerPhase)
+        if (handActive)
         {
             if (isDragging)
             {

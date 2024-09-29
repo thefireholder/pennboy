@@ -17,12 +17,13 @@ public class WaveManager : MonoBehaviour
     int[] numberOfSpawnEnemy = {2,2,2,3,3,3,4,4,4,5,5,5};
 
     private float playerPhaseLength = 15f;
-    private float bombPhaseLength = 15f;
-    private float enemyPhaseLength = 5f;
+    private float bombPhaseLength = 10f;
+    private float enemyPhaseLength = 2f;
     private OutwardForce bombPushingObject;
     private SpawnSurface[] spawnEnemySurfaces;
     private Throw hand;
     private OverflowDetector overflowDetector;
+    private CameraView cameraView;
     private float phaseStartedAt;
 
     // during player phase, player plays combining game
@@ -38,6 +39,7 @@ public class WaveManager : MonoBehaviour
         spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
         hand = FindObjectOfType<Throw>();
         overflowDetector = FindObjectOfType<OverflowDetector>();
+        cameraView = FindObjectOfType<CameraView>();
         phaseStartedAt = Time.time;
     }
 
@@ -115,9 +117,10 @@ public class WaveManager : MonoBehaviour
 
         // activate hand if it exists
         if (hand != null) hand.activateHand(true);
+        if (cameraView != null) cameraView.ZoomIn();
 
         // start bomb overflow detection
-        overflowDetector.InitiateDetection();
+        if (overflowDetector != null) overflowDetector.InitiateDetection();
     }
 
     void StartBombPhase()
@@ -129,11 +132,12 @@ public class WaveManager : MonoBehaviour
 
         // deactivate hand if it exists
         if (hand != null) hand.activateHand(false);
+        if (cameraView != null) cameraView.ZoomOut();
 
         // push bomnbs off
         if (bombPushingObject != null)
         {
-            bombPushingObject.pushBombsOff(bombPhaseLength/2);
+            bombPushingObject.pushBombsOff(bombPhaseLength * 2/3);
         }
     }
 
@@ -154,7 +158,7 @@ public class WaveManager : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         for (int i = 0; i < enemies.Length; i++)
         {
-            enemies[i].GetComponent<Enemy>().ClimbUp(enemyPhaseLength / 2);
+            enemies[i].GetComponent<Enemy>().ClimbUp(enemyPhaseLength);
         }
 
         // spawn new enemy

@@ -20,6 +20,7 @@ public class Throw : MonoBehaviour
     public float defaultMagnitude = 7;
     public float angleControlScale = 20;
     public float magControlScale = 400;
+    public float rateBySeconds = 1; // 2 means 2 bomb per seconds
 
     [SerializeField]
     private float angle = 30;
@@ -32,17 +33,23 @@ public class Throw : MonoBehaviour
     // mouse drag information
     private Vector3 mouseStartPosition;
     private bool isDragging = false;
+    private float lastThrownTime;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         mouseStartPosition = Input.mousePosition;
         handActive = true;
+        lastThrownTime = Time.time;
     }
 
     public void activateHand(bool activate)
     {
         handActive = activate;
+        lineRenderer.enabled = activate;
+
+
     }
 
     // Update is called once per frame
@@ -82,7 +89,13 @@ public class Throw : MonoBehaviour
                 //Debug.Log("Drag distance: " + dragExtent.magnitude); // Prints the length of the drag
 
                 // if right click, throw bomb
-                CreateBomb(startPoint, startVelocity);
+                float currentTime = Time.time;
+                // has a limitation on how fast it can throw
+                if (currentTime > lastThrownTime + 1 / rateBySeconds)
+                {
+                    CreateBomb(startPoint, startVelocity);
+                    lastThrownTime = currentTime;
+                }
             }
         }
 

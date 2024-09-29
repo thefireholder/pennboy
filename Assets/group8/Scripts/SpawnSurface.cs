@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class RandomSpawner : MonoBehaviour
+public class SpawnSurface : MonoBehaviour
 {
     // Object to spawn
     public GameObject objectToSpawn;
@@ -16,15 +16,11 @@ public class RandomSpawner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Spawn();
-        }
     }
 
-    public void Spawn()
+    public void Spawn(int numberOfObjects)
     {
-        Debug.Log(numberOfObjects + " Enemy Spawned");
+        //Debug.Log(numberOfObjects + " Enemy Spawned");
         Vector3[] spawnPositions = GenerateSpawnPositions(numberOfObjects);
         SpawnObjects(spawnPositions);
     }
@@ -63,7 +59,7 @@ public class RandomSpawner : MonoBehaviour
         {
             Vector3 position = transform.rotation * localPosition + transform.position;
             Instantiate(objectToSpawn, position, Quaternion.identity);
-            Debug.Log(position);
+            //Debug.Log(position);
         }
     }
 }

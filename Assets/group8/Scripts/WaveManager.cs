@@ -11,11 +11,16 @@ public class WaveManager : MonoBehaviour
 
     public int maximumBomb = 10;
     public bool RequirePressBarForNextPhase = false;
-    
+
+
+    [SerializeField]
+    int[] numberOfSpawnEnemy = {2,2,2,3,3,3,4,4,4,5,5,5};
+
     private float playerPhaseLength = 5f;
     private float bombPhaseLength = 15f;
     private float enemyPhaseLength = 5f;
     private OutwardForce bombPushingObject;
+    private SpawnSurface[] spawnEnemySurfaces;
     private float phaseStartedAt;
 
     // during player phase, player plays combining game
@@ -28,6 +33,7 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         bombPushingObject = FindObjectOfType<OutwardForce>();
+        spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
         phaseStartedAt = Time.time;
     }
 
@@ -123,6 +129,10 @@ public class WaveManager : MonoBehaviour
         }
 
         // spawn new enemy
+        int nEnemy = numberOfSpawnEnemy[waveNumber];
+        for (int i = 0; i < spawnEnemySurfaces.Length; i++)
+            spawnEnemySurfaces[i].Spawn(nEnemy);
+            
     }
 
     void endPhase(Phase phase, string why)

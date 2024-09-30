@@ -20,34 +20,42 @@ public class Throw : MonoBehaviour
     public float defaultMagnitude = 7;
     public float angleControlScale = 20;
     public float magControlScale = 400;
+    public float rateBySeconds = 1; // 2 means 2 bomb per seconds
 
     [SerializeField]
     private float angle = 30;
     [SerializeField]
     private float magnitude = 10;
 
-    private WaveManager waveManager;
     [SerializeField]
-    private Phase currentPhase;
+    private bool handActive; // turn this on to make the hand be able to throw bomb
 
     // mouse drag information
     private Vector3 mouseStartPosition;
     private bool isDragging = false;
+    private float lastThrownTime;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         mouseStartPosition = Input.mousePosition;
+        handActive = true;
+        lastThrownTime = Time.time;
+    }
 
-        waveManager = FindObjectOfType<WaveManager>();
-        currentPhase = waveManager.currentPhase;
+    public void activateHand(bool activate)
+    {
+        handActive = activate;
+        lineRenderer.enabled = activate;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentPhase = waveManager.currentPhase;
-        if (waveManager.currentPhase == Phase.PlayerPhase)
+        if (handActive)
         {
             if (isDragging)
             {
@@ -81,7 +89,13 @@ public class Throw : MonoBehaviour
                 //Debug.Log("Drag distance: " + dragExtent.magnitude); // Prints the length of the drag
 
                 // if right click, throw bomb
-                CreateBomb(startPoint, startVelocity);
+                float currentTime = Time.time;
+                // has a limitation on how fast it can throw
+                if (currentTime > lastThrownTime + 1 / rateBySeconds)
+                {
+                    CreateBomb(startPoint, startVelocity);
+                    lastThrownTime = currentTime;
+                }
             }
         }
 

@@ -11,11 +11,19 @@ public class WaveManager : MonoBehaviour
 
     public int maximumBomb = 10;
     public bool RequirePressBarForNextPhase = false;
-    
-    private float playerPhaseLength = 5f;
-    private float bombPhaseLength = 15f;
-    private float enemyPhaseLength = 5f;
+
+
+    [SerializeField]
+    int[] numberOfSpawnEnemy = {2,2,2,3,3,3,4,4,4,5,5,5};
+
+    private float playerPhaseLength = 15f;
+    private float bombPhaseLength = 10f;
+    private float enemyPhaseLength = 2f;
     private OutwardForce bombPushingObject;
+    private SpawnSurface[] spawnEnemySurfaces;
+    private Throw hand;
+    private OverflowDetector overflowDetector;
+    private CameraView cameraView;
     private float phaseStartedAt;
 
     // during player phase, player plays combining game
@@ -28,6 +36,10 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         bombPushingObject = FindObjectOfType<OutwardForce>();
+        spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
+        hand = FindObjectOfType<Throw>();
+        overflowDetector = FindObjectOfType<OverflowDetector>();
+        cameraView = FindObjectOfType<CameraView>();
         phaseStartedAt = Time.time;
     }
 
@@ -65,9 +77,22 @@ public class WaveManager : MonoBehaviour
         {
             int nBomb = GameObject.FindGameObjectsWithTag("Bomb").Length;
             if (nBomb == maximumBomb)
-                endPhase(Phase.PlayerPhase, "Bomb exceeded Length (" + nBomb + "/" + maximumBomb +")");
+            {
+                endPhase(Phase.PlayerPhase, "Bomb exceeded Length (" + nBomb + "/" + maximumBomb + ")");
+                /* needs to be called if terminate Detection no longer used */
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
             else if (currentTime > phaseStartedAt + playerPhaseLength)
+            {
                 endPhase(Phase.PlayerPhase, "Time is up");
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
+            else if (overflowDetector.BombOverflowDetected())
+            {
+                endPhase(Phase.PlayerPhase, "Overflow detected");
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
+
         }
         if (currentPhase == Phase.BombPhase)
         {
@@ -89,6 +114,13 @@ public class WaveManager : MonoBehaviour
         currentPhase = Phase.PlayerPhase;
         phaseStartedAt = Time.time;
         Debug.Log("Player Phase started");
+
+        // activate hand if it exists
+        if (hand != null) hand.activateHand(true);
+        if (cameraView != null) cameraView.ZoomIn();
+
+        // start bomb overflow detection
+        if (overflowDetector != null) overflowDetector.InitiateDetection();
     }
 
     void StartBombPhase()
@@ -98,10 +130,14 @@ public class WaveManager : MonoBehaviour
         phaseStartedAt = Time.time;
         Debug.Log("Bomb Phase started");
 
+        // deactivate hand if it exists
+        if (hand != null) hand.activateHand(false);
+        if (cameraView != null) cameraView.ZoomOut();
+
         // push bomnbs off
         if (bombPushingObject != null)
         {
-            bombPushingObject.pushBombsOff(bombPhaseLength/2);
+            bombPushingObject.pushBombsOff(bombPhaseLength * 2/3);
         }
     }
 
@@ -112,6 +148,9 @@ public class WaveManager : MonoBehaviour
         phaseStartedAt = Time.time;
         Debug.Log("Enemy Phase started");
 
+        // deactivate hand if it exists
+        if (hand != null) hand.activateHand(false);
+
         // increase your wave track
         waveNumber += 1;
 
@@ -119,10 +158,14 @@ public class WaveManager : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         for (int i = 0; i < enemies.Length; i++)
         {
-            enemies[i].GetComponent<Enemy>().ClimbUp(enemyPhaseLength / 2);
+            enemies[i].GetComponent<Enemy>().ClimbUp(enemyPhaseLength);
         }
 
         // spawn new enemy
+        int nEnemy = numberOfSpawnEnemy[waveNumber];
+        for (int i = 0; i < spawnEnemySurfaces.Length; i++)
+            spawnEnemySurfaces[i].Spawn(nEnemy);
+            
     }
 
     void endPhase(Phase phase, string why)

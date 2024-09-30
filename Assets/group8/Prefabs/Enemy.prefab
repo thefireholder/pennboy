@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phaseLength: 10
-  climbHeight: 5
+  climbHeight: 3
   flyLength: 20
   flyDuration: 1
 --- !u!54 &5459542538582110724

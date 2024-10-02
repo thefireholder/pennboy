@@ -6,18 +6,20 @@ public class CameraRotater : MonoBehaviour
 {
 
     public float speed;
-    public float radius; 
+    public float radius;
     // Start is called before the first frame update
+
+    GameObject mainCamera;
 
     void Start()
     {
-        
+        mainCamera = transform.GetChild(0).gameObject; // for optimizaton purpose do not put this inside update
     }
 
     // Update is called once per frame
     void Update()
     {
-        GameObject mainCamera = transform.Find("Main Camera").gameObject;
+        
 
         if (Input.GetKey(KeyCode.LeftArrow)){
             transform.Rotate(0, -speed*Time.deltaTime, 0); //(x, y ,z )

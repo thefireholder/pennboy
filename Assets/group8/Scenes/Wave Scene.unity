@@ -123,6 +123,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &246007104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 246007106}
+  - component: {fileID: 246007105}
+  m_Layer: 0
+  m_Name: Player Rotater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &246007105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246007104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57dcb84dd8420fd49929075c07a92eb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: -40
+  radius: 4
+--- !u!4 &246007106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246007104}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 956333336}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &480703640
 GameObject:
   m_ObjectHideFlags: 0
@@ -870,13 +917,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956333335}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 24, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 935243455}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 246007106}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1135316079 stripped
 Transform:
@@ -1387,6 +1434,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 935243455}
     m_Modifications:
+    - target: {fileID: 2202269488783318850, guid: 108a6ade93da7416e8bb22e00fc47c1f,
+        type: 3}
+      propertyPath: rateBySeconds
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4213959164009039649, guid: 108a6ade93da7416e8bb22e00fc47c1f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1536,4 +1588,4 @@ SceneRoots:
   - {fileID: 932299185}
   - {fileID: 1545532733}
   - {fileID: 1416375788}
-  - {fileID: 956333336}
+  - {fileID: 246007106}

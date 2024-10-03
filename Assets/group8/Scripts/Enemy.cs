@@ -59,15 +59,20 @@ public class Enemy : MonoBehaviour
     {
         // called when enemy reached top
         // make the enemy run to the center, and get to the trap door in the middle
+        Vector3 start = transform.position;
+        Vector3 end = new Vector3(0,transform.position.y,0);
+        float duration = 1.36f;
+        float clipDuration = 0.36f;
+        StartCoroutine(MoveOverTime(start, end, duration, clipDuration));
     }
 
     // Coroutine to move the object from startPosition to endPosition over the given duration
-    IEnumerator MoveOverTime(Vector3 start, Vector3 end, float duration)
+    IEnumerator MoveOverTime(Vector3 start, Vector3 end, float duration, float clipDuration = 0)
     {
 
         float elapsedTime = 0f;
 
-        while (elapsedTime < duration)
+        while (elapsedTime < (duration - clipDuration))
         {
             // Lerp position from start to end based on elapsed time
             transform.position = Vector3.Lerp(start, end, elapsedTime / duration);
@@ -80,7 +85,7 @@ public class Enemy : MonoBehaviour
         }
 
         // Ensure the object reaches the exact end position after the movement
-        transform.position = end;
+        if (clipDuration == 0) transform.position = end;
 
     }
 

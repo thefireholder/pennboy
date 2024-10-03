@@ -79,7 +79,7 @@ public class Bomb : MonoBehaviour
 
                     // add score
                     int score = level2Score[level];
-                    scoreManager.addScore(score);
+                    if (scoreManager != null) scoreManager.addScore(score);
                 }
                 Destroy(gameObject);
                 

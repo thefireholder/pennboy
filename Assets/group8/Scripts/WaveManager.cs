@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
 
-public enum Phase { EnemyPhase, EnemyPhaseEnded, BombPhase, BombPhaseEnded, PlayerPhase, PlayerPhaseEnded };
+public enum Phase { EnemyPhase, EnemyPhaseEnded, BombPhase, BombPhaseEnded, PlayerPhase, PlayerPhaseEnded, GameOverPhase };
 
 public class WaveManager : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class WaveManager : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text bombText;
     public TMP_Text timerText;
-    public TMP_Text gameStateText;
+    public TMP_Text gameState1Text;
+    public TMP_Text gameState2Text;
     public bool textReady = false; // depends on existance of text objects
 
     private int score = 0;
@@ -31,9 +33,11 @@ public class WaveManager : MonoBehaviour
     private SpawnSurface[] spawnEnemySurfaces;
     private Throw hand;
     private OverflowDetector overflowDetector;
+    private EnemyReachingPlane enemyReachingPlane;
     private CameraView cameraView;
     private ScoreManager scoreManager;
     private float phaseStartedAt;
+    private bool hasNotGameOver = true;
     
     
 
@@ -50,6 +54,7 @@ public class WaveManager : MonoBehaviour
         spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
         hand = FindObjectOfType<Throw>();
         overflowDetector = FindObjectOfType<OverflowDetector>();
+        enemyReachingPlane = FindObjectOfType<EnemyReachingPlane>();
         cameraView = FindObjectOfType<CameraView>();
         scoreManager = FindObjectOfType<ScoreManager>();
         phaseStartedAt = Time.time;
@@ -59,7 +64,12 @@ public class WaveManager : MonoBehaviour
         textReady = ((scoreText != null) &&
             (bombText != null) &&
             (timerText != null) &&
-            (gameStateText != null));
+            (gameState2Text != null) &&
+            (gameState1Text != null));
+
+        // start by disabling game over text
+        if (gameState1Text != null) gameState1Text.enabled = false;
+        if (gameState2Text != null) gameState2Text.enabled = false;
     }
 
     // Update is called once per frame
@@ -136,6 +146,18 @@ public class WaveManager : MonoBehaviour
             bombText.text = "MAX Bomb: " + nBomb + " / " + maximumBomb;
             timerText.text = "Time: " + timerValue.ToString();
         }
+
+        if (enemyReachingPlane != null)
+            if (hasNotGameOver && enemyReachingPlane.enemyReachedPlane)
+                triggerGameOver();
+            
+
+        /* restart game */
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
 
     }
 
@@ -238,5 +260,20 @@ public class WaveManager : MonoBehaviour
                 break;
         }
         
+    }
+
+    void triggerGameOver()
+    {
+        hasNotGameOver = false;
+        currentPhase = Phase.GameOverPhase;
+        StartCoroutine(showDelayedGameOverText());
+    }
+
+    IEnumerator showDelayedGameOverText()
+    {
+        float delay = 1;
+        yield return new WaitForSeconds(delay);
+        if (gameState1Text != null) gameState1Text.enabled = true;
+        if (gameState2Text != null) gameState2Text.enabled = true;
     }
 }

@@ -20,6 +20,7 @@ public class Bomb : MonoBehaviour
 
     // private variable
     private float[]  bombSizes = new float[] { 1f, 1.5f, 2f, 2.5f, 3f };
+    private int[] level2Score = new int[] { 3, 5, 10, 20, 30, 50};
     private System.DateTime born = System.DateTime.Now;
     public int parentsLevel = -1; // -1 means had no parent bomb
     ScoreManager scoreManager;
@@ -77,7 +78,7 @@ public class Bomb : MonoBehaviour
                     newBomb.GetComponent<Bomb>().parentsLevel = level;
 
                     // add score
-                    int score = (int)Mathf.Pow(2,(level)) * 100;
+                    int score = level2Score[level];
                     scoreManager.addScore(score);
                 }
                 Destroy(gameObject);

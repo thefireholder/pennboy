@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
         StartCoroutine(DelayedDeath(flyDuration));
 
         // add score
-        int score = 1000;
+        int score = 100;
         if (scoreManager != null) scoreManager.addScore(score);
     }
 

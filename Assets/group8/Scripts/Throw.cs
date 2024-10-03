@@ -99,8 +99,8 @@ public class Throw : MonoBehaviour
                     lastThrownTime = currentTime;
 
                     //add score
-                    int score = 50;
-                    if (scoreManager != null) scoreManager.addScore(score);
+                    //int score = 5;
+                    //if (scoreManager != null) scoreManager.addScore(score);
                 }
             }
         }

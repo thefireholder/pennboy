@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public enum Phase { EnemyPhase, EnemyPhaseEnded, BombPhase, BombPhaseEnded, PlayerPhase, PlayerPhaseEnded };
 
@@ -11,20 +12,30 @@ public class WaveManager : MonoBehaviour
 
     public int maximumBomb = 10;
     public bool RequirePressBarForNextPhase = false;
+    public TMP_Text scoreText;
+    public TMP_Text bombText;
+    public TMP_Text timerText;
+    public TMP_Text gameStateText;
+    public bool textReady = false; // depends on existance of text objects
 
+    private int score = 0;
 
     [SerializeField]
     int[] numberOfSpawnEnemy = {2,2,2,3,3,3,4,4,4,5,5,5};
 
-    private float playerPhaseLength = 15f;
+    private float playerPhaseLength = 25f;
     private float bombPhaseLength = 10f;
     private float enemyPhaseLength = 2f;
+    private float bombCleanUpHeight = 3f;
     private OutwardForce bombPushingObject;
     private SpawnSurface[] spawnEnemySurfaces;
     private Throw hand;
     private OverflowDetector overflowDetector;
     private CameraView cameraView;
+    private ScoreManager scoreManager;
     private float phaseStartedAt;
+    
+    
 
     // during player phase, player plays combining game
     // during bombphase, bomb starts falling
@@ -40,13 +51,23 @@ public class WaveManager : MonoBehaviour
         hand = FindObjectOfType<Throw>();
         overflowDetector = FindObjectOfType<OverflowDetector>();
         cameraView = FindObjectOfType<CameraView>();
+        scoreManager = FindObjectOfType<ScoreManager>();
         phaseStartedAt = Time.time;
+
+
+        // display text only if text objects are all set correctly
+        textReady = ((scoreText != null) &&
+            (bombText != null) &&
+            (timerText != null) &&
+            (gameStateText != null));
     }
 
     // Update is called once per frame
     void Update()
     {
         float currentTime = Time.time;
+        int nBomb = 0;
+        string timerValue = "x";
 
         // Check if space is pressed and the object is not already moving
         switch (currentPhase)
@@ -75,7 +96,9 @@ public class WaveManager : MonoBehaviour
         // manually ending phase by condition
         if (currentPhase == Phase.PlayerPhase)
         {
-            int nBomb = GameObject.FindGameObjectsWithTag("Bomb").Length;
+            // calculate time left (+1 is so that the count down begins with maximum number 14.9s -> 15s
+            timerValue = ((int)(playerPhaseLength - (currentTime - phaseStartedAt) + 1)).ToString();
+            nBomb = GameObject.FindGameObjectsWithTag("Bomb").Length;
             if (nBomb == maximumBomb)
             {
                 endPhase(Phase.PlayerPhase, "Bomb exceeded Length (" + nBomb + "/" + maximumBomb + ")");
@@ -105,6 +128,14 @@ public class WaveManager : MonoBehaviour
                 endPhase(Phase.EnemyPhase, "Time is up");
         }
 
+        // handle scores
+        if (scoreManager != null) score = scoreManager.getScore();
+        if (textReady)
+        {
+            scoreText.text = "Score: " + score.ToString();
+            bombText.text = "MAX Bomb: " + nBomb + " / " + maximumBomb;
+            timerText.text = "Time: " + timerValue.ToString();
+        }
 
     }
 
@@ -118,6 +149,12 @@ public class WaveManager : MonoBehaviour
         // activate hand if it exists
         if (hand != null) hand.activateHand(true);
         if (cameraView != null) cameraView.ZoomIn();
+
+        // get rid of bombs not on tower
+        foreach (GameObject bomb in GameObject.FindGameObjectsWithTag("Bomb"))
+            // code block to be executed
+            if (bomb.transform.position.y < bombCleanUpHeight)
+                Destroy(bomb);
 
         // start bomb overflow detection
         if (overflowDetector != null) overflowDetector.InitiateDetection();

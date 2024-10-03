@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
 
     public float flyLength = 3f;
     public float flyDuration = 2f;
+    private ScoreManager scoreManager;
 
     private Rigidbody rb;
 
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        scoreManager = FindObjectOfType<ScoreManager>();
     }
 
     // Update is called once per frame
@@ -46,6 +48,10 @@ public class Enemy : MonoBehaviour
         rb.isKinematic = false;
         rb.velocity = Random.onUnitSphere * flyLength;
         StartCoroutine(DelayedDeath(flyDuration));
+
+        // add score
+        int score = 1000;
+        if (scoreManager != null) scoreManager.addScore(score);
     }
 
 

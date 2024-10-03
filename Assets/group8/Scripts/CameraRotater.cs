@@ -21,24 +21,24 @@ public class CameraRotater : MonoBehaviour
     {
         
 
-        if (Input.GetKey(KeyCode.LeftArrow)){
+        if (Input.GetKey(KeyCode.A)){
             transform.Rotate(0, -speed*Time.deltaTime, 0); //(x, y ,z )
 
         }
 
-        if (Input.GetKey(KeyCode.RightArrow)){
+        if (Input.GetKey(KeyCode.D)){
             transform.Rotate(0, speed*Time.deltaTime, 0); //(x, y ,z )
 
 
         }
 
-        if (Input.GetKey(KeyCode.DownArrow)){
+        if (Input.GetKey(KeyCode.S)){
 
             mainCamera.transform.localPosition += new Vector3(0, radius*Time.deltaTime, -radius*Time.deltaTime); //(x, y ,z )
 
         }
 
-        if (Input.GetKey(KeyCode.UpArrow)){
+        if (Input.GetKey(KeyCode.W)){
 
             if(mainCamera.transform.localPosition.y >= 24 && mainCamera.transform.localPosition.z <= -12){ 
 

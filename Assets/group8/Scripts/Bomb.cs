@@ -22,6 +22,7 @@ public class Bomb : MonoBehaviour
     private float[]  bombSizes = new float[] { 1f, 1.5f, 2f, 2.5f, 3f };
     private System.DateTime born = System.DateTime.Now;
     public int parentsLevel = -1; // -1 means had no parent bomb
+    ScoreManager scoreManager;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,7 @@ public class Bomb : MonoBehaviour
         transform.localScale = Vector3.one * bombSizes[level];
 
         //Debug.Log("my level" + level);
+        scoreManager = FindObjectOfType<ScoreManager>();
     }
 
     // Update is called once per frame
@@ -73,6 +75,10 @@ public class Bomb : MonoBehaviour
                     // create bomb and set its parentslevel
                     var newBomb = Instantiate(childBomb, newPosition, Quaternion.identity);
                     newBomb.GetComponent<Bomb>().parentsLevel = level;
+
+                    // add score
+                    int score = (int)Mathf.Pow(2,(level)) * 100;
+                    scoreManager.addScore(score);
                 }
                 Destroy(gameObject);
                 

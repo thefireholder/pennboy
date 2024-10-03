@@ -34,7 +34,8 @@ public class Throw : MonoBehaviour
     private Vector3 mouseStartPosition;
     private bool isDragging = false;
     private float lastThrownTime;
-    
+    private ScoreManager scoreManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +43,7 @@ public class Throw : MonoBehaviour
         mouseStartPosition = Input.mousePosition;
         handActive = true;
         lastThrownTime = Time.time;
+        scoreManager = FindObjectOfType<ScoreManager>();
     }
 
     public void activateHand(bool activate)
@@ -95,6 +97,10 @@ public class Throw : MonoBehaviour
                 {
                     CreateBomb(startPoint, startVelocity);
                     lastThrownTime = currentTime;
+
+                    //add score
+                    int score = 50;
+                    if (scoreManager != null) scoreManager.addScore(score);
                 }
             }
         }

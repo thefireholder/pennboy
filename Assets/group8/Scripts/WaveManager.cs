@@ -40,7 +40,7 @@ public class WaveManager : MonoBehaviour
     private ScoreManager scoreManager;
     private float phaseStartedAt;
     private bool hasNotGameOver = true;
-    private float highestBombLevelRead = 0;
+    private int highestBombLevelRead = 0;
 
     // controlling bomb canvas
     public Image bombCanvasImage;
@@ -172,6 +172,9 @@ public class WaveManager : MonoBehaviour
             {
                 ChangeBombCanvasImage(level);
                 highestBombLevelRead = level;
+
+                // increase bomb creation level by set amount depending on wave and unlocked bombs
+                if (hand != null) hand.setBombCreationLevel(Mathf.Max(highestBombLevelRead - 2, 1));
             }
         }
 
@@ -202,6 +205,8 @@ public class WaveManager : MonoBehaviour
 
         // terminate enemy reaching plane
         if (enemyReachingPlane != null) enemyReachingPlane.TerminateDetection();
+
+        
 
     }
 

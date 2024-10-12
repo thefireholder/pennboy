@@ -26,6 +26,7 @@ public class Throw : MonoBehaviour
     public float minMag = 6.75f;
 
     public float rateBySeconds = 1; // 2 means 2 bomb per seconds
+    int bombCreationLevel = 0;
 
     [SerializeField]
     private float angle = 30;
@@ -114,8 +115,21 @@ public class Throw : MonoBehaviour
 
     void CreateBomb(Vector3 startPoint, Vector3 startVelocity)
     {
-        Rigidbody rb = Instantiate(thrownObject, startPoint, Quaternion.Euler(0, 0, 30)).GetComponent<Rigidbody>();
+        var bomb = Instantiate(thrownObject, startPoint, Quaternion.Euler(0, 0, 30));
+        Rigidbody rb = bomb.GetComponent<Rigidbody>();
         rb.velocity = startVelocity;
+        int level = Random.Range(0, bombCreationLevel+1);
+        bomb.GetComponent<Bomb>().level = level;
+        bomb.GetComponent<Bomb>().parentsLevel = level - 1;
+
+
+    }
+
+    public void setBombCreationLevel(int level)
+    /* this is the level of bomb you can create up to, so if 2, then 0,1,2 is all possible*/
+    {
+        Debug.Log("Bomb Creation Level set as " + level.ToString());
+        bombCreationLevel = level;
     }
 
     public void ShowTrajectoryLine(Vector3 startpoint, Vector3 startVelocity)

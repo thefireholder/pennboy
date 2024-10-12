@@ -159,5 +159,12 @@ public class Bomb : MonoBehaviour
         }
     }
 
+    public void RollDownTheSideOfTower()
+    {
+        Vector3 dir = Vector3.zero - transform.position;
+        dir.y = transform.position.y;
+        GetComponent<Rigidbody>().AddForce(dir*10);
+    }
+
 
 }

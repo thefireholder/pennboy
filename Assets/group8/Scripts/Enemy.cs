@@ -5,11 +5,17 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float phaseLength = 10f;
-    public float climbHeight = 5f;
+    public float climbHeight = 3f;
+    public float initialClimbHeight = 3f;
+    public float variation = 0.5f;
+    public float initalVariation = 2f;
+    private bool isFirstClimb = true;
 
     public float flyLength = 3f;
     public float flyDuration = 2f;
     private ScoreManager scoreManager;
+    public Material[] materials;
+    public int colorChoice = 0;
 
     private Rigidbody rb;
 
@@ -18,6 +24,10 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         scoreManager = FindObjectOfType<ScoreManager>();
+        //if (colorChoice == -1)
+        //    ChooseColor(Random.Range(0,2));
+        //else
+        //ChooseColor(colorChoice);
     }
 
     // Update is called once per frame
@@ -29,7 +39,13 @@ public class Enemy : MonoBehaviour
     public void ClimbUp(float duration)
     {
         // should climb up every wave
-        Vector3 upward = Vector3.up * climbHeight;
+        float upMagnitude = (climbHeight + Random.Range(-1f, 1f) * variation);
+        if (isFirstClimb)
+        {
+            upMagnitude = (initialClimbHeight + Random.Range(-1f, 1f) * initalVariation);
+            isFirstClimb = false;
+        }   
+        Vector3 upward = Vector3.up * upMagnitude;
         StartCoroutine(MoveOverTime(transform.position, transform.position + upward, duration));
     }
 
@@ -87,6 +103,21 @@ public class Enemy : MonoBehaviour
         // Ensure the object reaches the exact end position after the movement
         if (clipDuration == 0) transform.position = end;
 
+    }
+
+    // Function to change the object's material
+    public void ChooseColor(int choice=0)
+    {
+        Renderer renderer = GetComponent<Renderer>();
+
+        if (renderer != null)
+        {
+            renderer.material = materials[choice];
+        }
+        else
+        {
+            Debug.LogWarning("Renderer component not found on this GameObject.");
+        }
     }
 
     IEnumerator DelayedDeath(float delay)

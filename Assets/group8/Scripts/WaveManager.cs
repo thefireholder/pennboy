@@ -40,6 +40,7 @@ public class WaveManager : MonoBehaviour
     private ScoreManager scoreManager;
     private float phaseStartedAt;
     private bool hasNotGameOver = true;
+    private float highestBombLevelRead = 0;
 
     // controlling bomb canvas
     public Image bombCanvasImage;
@@ -163,6 +164,16 @@ public class WaveManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+        // update bomb canvas
+        if (scoreManager != null)
+        {
+            int level = scoreManager.getHighestBombLevel();
+            if (level > highestBombLevelRead)
+            {
+                ChangeBombCanvasImage(level);
+                highestBombLevelRead = level;
+            }
+        }
 
     }
 
@@ -172,6 +183,9 @@ public class WaveManager : MonoBehaviour
         currentPhase = Phase.PlayerPhase;
         phaseStartedAt = Time.time;
         Debug.Log("Player Phase started");
+
+        // increase player phase length by set amount
+        playerPhaseLength += (waveNumber - 1) * 3;
 
         // activate hand if it exists
         if (hand != null) hand.activateHand(true);
@@ -188,12 +202,6 @@ public class WaveManager : MonoBehaviour
 
         // terminate enemy reaching plane
         if (enemyReachingPlane != null) enemyReachingPlane.TerminateDetection();
-
-        // update bomb canvas
-        if (scoreManager != null) {
-            int level = scoreManager.getHighestBombLevel();
-            ChangeBombCanvasImage(level);
-        }
 
     }
 
@@ -240,10 +248,7 @@ public class WaveManager : MonoBehaviour
         }
 
         // spawn new enemy
-        int nEnemy = numberOfSpawnEnemy[waveNumber];
-        for (int i = 0; i < spawnEnemySurfaces.Length; i++)
-            spawnEnemySurfaces[i].Spawn(nEnemy);
-            
+        StartCoroutine(SpawnEnemyAfterDelay(enemyPhaseLength / 2));
     }
 
     void endPhase(Phase phase, string why)
@@ -287,6 +292,16 @@ public class WaveManager : MonoBehaviour
         currentPhase = Phase.GameOverPhase;
         StartCoroutine(showDelayedGameOverText());
     }
+
+    IEnumerator SpawnEnemyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        int nEnemy = numberOfSpawnEnemy[waveNumber];
+        for (int i = 0; i < spawnEnemySurfaces.Length; i++)
+            spawnEnemySurfaces[i].Spawn(nEnemy);
+
+    }
+
 
     IEnumerator showDelayedGameOverText()
     {

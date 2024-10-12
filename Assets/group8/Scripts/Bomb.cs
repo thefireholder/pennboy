@@ -19,8 +19,8 @@ public class Bomb : MonoBehaviour
     public float newBombPositionParameter = 0.5f; // must be between 0 and 1
 
     // private variable
-    private float[]  bombSizes = new float[] { 1f, 1.5f, 2f, 2.5f, 3f };
-    private int[] level2Score = new int[] { 3, 5, 10, 20, 30, 50};
+    private float[]  bombSizes = new float[] { 1f, 1.5f, 2f, 2.5f, 3f, 3.3f, 3.6f, 3.9f, 4.3f };
+    private int[] level2Score = new int[] { 3, 5, 10, 20, 30, 50, 70, 90, 120, 150};
     private System.DateTime born = System.DateTime.Now;
     public int parentsLevel = -1; // -1 means had no parent bomb
     private bool fromCombined = false;

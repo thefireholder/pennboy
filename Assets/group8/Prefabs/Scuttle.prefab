@@ -149,5 +149,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseLength: 10
   climbHeight: 3
+  initialClimbHeight: 6
+  variation: 0.5
+  initalVariation: 0.5
   flyLength: 20
   flyDuration: 1
+  materials:
+  - {fileID: 2100000, guid: 6395facfb5704493786380d5f31e1b90, type: 2}
+  - {fileID: 2100000, guid: 86c1dab454fe24d1fb448d3e2fba3dbf, type: 2}
+  - {fileID: 2100000, guid: 0a91b89e15d2e492fa876704777d9c04, type: 2}

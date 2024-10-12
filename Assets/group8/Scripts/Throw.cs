@@ -18,8 +18,13 @@ public class Throw : MonoBehaviour
 
     public float defaultAngle = 30;
     public float defaultMagnitude = 7;
-    public float angleControlScale = 20;
-    public float magControlScale = 400;
+    public float angleControlScale = 1;
+    public float magControlScale = 20;
+    public float maxAngle = 30.70f;
+    public float minAngle = 29.95f;
+    public float maxMag = 10.70f;
+    public float minMag = 6.75f;
+
     public float rateBySeconds = 1; // 2 means 2 bomb per seconds
 
     [SerializeField]
@@ -27,12 +32,13 @@ public class Throw : MonoBehaviour
     [SerializeField]
     private float magnitude = 10;
 
+
     [SerializeField]
     private bool handActive; // turn this on to make the hand be able to throw bomb
 
     // mouse drag information
     private Vector3 mouseStartPosition;
-    private bool isDragging = false;
+
     private float lastThrownTime;
     private ScoreManager scoreManager;
 
@@ -50,8 +56,6 @@ public class Throw : MonoBehaviour
     {
         handActive = activate;
         lineRenderer.enabled = activate;
-
-
     }
 
     // Update is called once per frame
@@ -59,12 +63,13 @@ public class Throw : MonoBehaviour
     {
         if (handActive)
         {
-            if (isDragging)
-            {
-                angle = defaultAngle + (Input.mousePosition - mouseStartPosition).y / angleControlScale;
-                magnitude = defaultMagnitude + (Input.mousePosition - mouseStartPosition).y / magControlScale;
-            }
 
+            // get mouse position
+            float normMousePos = -0.5f + Input.mousePosition.y / Screen.height * 2f;
+            normMousePos = Mathf.Max(normMousePos, 0);
+            normMousePos = Mathf.Min(normMousePos, 1);
+            angle = minAngle + (maxAngle - minAngle) * normMousePos;
+            magnitude = minMag + (maxMag - minMag) * normMousePos;
 
             Vector3 startPoint = transform.position;
             Vector3 startVelocity = GetStartVelocity(angle, magnitude);
@@ -72,27 +77,13 @@ public class Throw : MonoBehaviour
             // Draw trajectory on game board
             ShowTrajectoryLine(startPoint, startVelocity);
 
-            // if clicked
-            if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
-            {
-                mouseStartPosition = Input.mousePosition; // Store the starting position
-                isDragging = true;
-            }
-
             // Detect mouse release (end of the drag)
-            if (Input.GetMouseButtonUp(0) && isDragging)
+            if (Input.GetMouseButtonDown(0))
             {
-                isDragging = false;
-
                 // Calculate and print the extent of the drag
                 Vector3 dragExtent = Input.mousePosition - mouseStartPosition;
-                // only care about y dimension
-                //Debug.Log("Drag extent: " + dragExtent);
-                //Debug.Log("Drag distance: " + dragExtent.magnitude); // Prints the length of the drag
 
-                // if right click, throw bomb
                 float currentTime = Time.time;
-                // has a limitation on how fast it can throw
                 if (currentTime > lastThrownTime + 1 / rateBySeconds)
                 {
                     CreateBomb(startPoint, startVelocity);

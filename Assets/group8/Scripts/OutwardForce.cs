@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class OutwardForce : MonoBehaviour
 {
-    public Vector3 startPosition;   // The starting position
-    public Vector3 endPosition;     // The end position
+    public Vector3 startScale;   // The starting Scale
+    public Vector3 endScale;     // The end Scale
     public float duration = 10f;    // Duration of the movement in seconds
     public bool isMoving = false;  // Track if the object is currently moving
 
@@ -28,11 +28,11 @@ public class OutwardForce : MonoBehaviour
     public void pushBombsOff(float _duration = -1)
     {
         if (_duration == -1) _duration = duration;
-        StartCoroutine(MoveOverTime(startPosition, endPosition, _duration));
+        StartCoroutine(GrowOverTime(startScale, endScale, _duration));
     }
 
-    // Coroutine to move the object from startPosition to endPosition over the given duration
-    IEnumerator MoveOverTime(Vector3 start, Vector3 end, float duration)
+    // Coroutine to move the object from startScale to endScale over the given duration
+    IEnumerator GrowOverTime(Vector3 start, Vector3 end, float duration)
     {
         //enabled = true;
         isMoving = true; // Mark the object as moving
@@ -41,8 +41,8 @@ public class OutwardForce : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            // Lerp position from start to end based on elapsed time
-            transform.position = Vector3.Lerp(start, end, elapsedTime / duration);
+            // Lerp scale from start to end based on elapsed time
+            transform.localScale = Vector3.Lerp(start, end, elapsedTime / duration);
 
             // Increment elapsed time
             elapsedTime += Time.deltaTime;
@@ -51,11 +51,11 @@ public class OutwardForce : MonoBehaviour
             yield return null;
         }
 
-        // Ensure the object reaches the exact end position after the movement
-        transform.position = end;
+        // Ensure the object reaches the exact end scale after the movement
+        transform.localScale = end;
 
         isMoving = false; // Mark the object as no longer moving
-        transform.position = start;
+        transform.localScale = start;
 
 
     }

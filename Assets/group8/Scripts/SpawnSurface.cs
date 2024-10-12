@@ -11,18 +11,21 @@ public class SpawnSurface : MonoBehaviour
 
     void Start()
     {
-
+        //Spawn(Random.Range(0, 2), 12, 2);
+        Spawn(Random.Range(0, 2), 11, 2);
+        Spawn(Random.Range(0, 3), 8, 3);
+        Spawn(Random.Range(0, 4), 4, 2);
     }
 
     void Update()
     {
     }
 
-    public void Spawn(int numberOfObjects)
+    public void Spawn(int numberOfObjects, float initialVelocity=-1f, float initalVariation=-1f)
     {
         //Debug.Log(numberOfObjects + " Enemy Spawned");
         Vector3[] spawnPositions = GenerateSpawnPositions(numberOfObjects);
-        SpawnObjects(spawnPositions);
+        SpawnObjects(spawnPositions, initialVelocity, initalVariation);
     }
 
     Vector3[] GenerateSpawnPositions(int numberOfObjects)
@@ -52,13 +55,21 @@ public class SpawnSurface : MonoBehaviour
         return spawnPositions.ToArray(); // Return the valid positions as an array
     }
 
-    void SpawnObjects(Vector3[] spawnPositions)
+    void SpawnObjects(Vector3[] spawnPositions, float initialVelocity=-1, float initalVariation=-1)
     {
         // Instantiate each object at the generated positions
         foreach (Vector3 localPosition in spawnPositions)
         {
             Vector3 position = transform.rotation * localPosition + transform.position;
-            Instantiate(objectToSpawn, position, transform.rotation * Quaternion.Euler(-90, 0, 0));
+            var enemy = Instantiate(objectToSpawn, position, transform.rotation * Quaternion.Euler(-90,0,0));
+            if (initialVelocity != -1)
+            {
+                enemy.GetComponent<Enemy>().initialClimbHeight = initialVelocity;
+            }
+            if (initalVariation != -1)
+            {
+                enemy.GetComponent<Enemy>().initalVariation = initalVariation;
+            }
             //Debug.Log(position);
         }
     }

@@ -16,20 +16,24 @@ public class CameraRotater : MonoBehaviour
 
     //private float screenCenterX;
     //bool isDragging;
+    //bool canMove;
 
     void Start()
     {
         mainCamera = transform.GetChild(0).gameObject; // for optimizaton purpose do not put this inside update
+        //canMove = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //// if clicked
-        //if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
-        //{
-        //    isDragging = true;
-        //}
+        // if clicked
+        if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
+        {
+            //isDragging = true;
+            //canMove = false;
+            //StartCoroutine(WaitThenMove());
+        }
 
         //if (Input.GetMouseButtonUp(0)) // 0 is the left mouse button
         //{
@@ -65,41 +69,40 @@ public class CameraRotater : MonoBehaviour
         //else
         //{
 
-        /*  Moving by keyboard input */
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(0, -speed * Time.deltaTime, 0); //(x, y ,z )
+        //if (canMove)
+        //{
 
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(0, speed * Time.deltaTime, 0); //(x, y ,z )
-
-
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-
-            mainCamera.transform.localPosition += new Vector3(0, radius * Time.deltaTime, -radius * Time.deltaTime); //(x, y ,z )
-
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-
-            if (mainCamera.transform.localPosition.y >= 24 && mainCamera.transform.localPosition.z <= -12)
+            /*  Moving by keyboard input */
+            if (Input.GetKey(KeyCode.A))
             {
-
-                mainCamera.transform.localPosition += new Vector3(0, -radius * Time.deltaTime, radius * Time.deltaTime); //(x, y ,z )
-
+                transform.Rotate(0, -speed * Time.deltaTime, 0); //(x, y ,z )
             }
+            if (Input.GetKey(KeyCode.D))
+            {
+                transform.Rotate(0, speed * Time.deltaTime, 0); //(x, y ,z )
+            }
+            //if (Input.GetKey(KeyCode.S))
+            //{
+            //    mainCamera.transform.localPosition += new Vector3(0, radius * Time.deltaTime, -radius * Time.deltaTime); //(x, y ,z )
+            //}
 
-
-        }
+            //if (Input.GetKey(KeyCode.W))
+            //{
+            //    if (mainCamera.transform.localPosition.y >= 24 && mainCamera.transform.localPosition.z <= -12)
+            //    {
+            //        mainCamera.transform.localPosition += new Vector3(0, -radius * Time.deltaTime, radius * Time.deltaTime); //(x, y ,z )
+            //    }
+            //}
+        //}
         //}
 
+        //IEnumerator WaitThenMove()
+        //{
+        //    float delay = 1.5f;
+        //    yield return new WaitForSeconds(delay);
+        //    canMove = true;
+
+        //}
 
 
     }

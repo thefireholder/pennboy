@@ -5,11 +5,13 @@ using UnityEngine;
 public class EnemyReachingPlane : MonoBehaviour
 {
     public bool enemyReachedPlane;
+    private bool canDetectEnemy;
 
     // Start is called before the first frame update
     void Start()
     {
         enemyReachedPlane = false;
+        canDetectEnemy = false;
     }
 
     // Update is called once per frame
@@ -18,13 +20,28 @@ public class EnemyReachingPlane : MonoBehaviour
         
     }
 
+    public void InitiateDetection()
+    /* sould only run by wave manager at correct phase*/
+    {
+        canDetectEnemy = true;
+    }
+
+    public void TerminateDetection()
+    /* should only run by wave manager at correct phase*/
+    {
+        canDetectEnemy = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (canDetectEnemy)
         {
-            other.gameObject.GetComponent<Enemy>().RushToCenter();
-            TriggerGameOver();
-            Debug.Log("Enemy Reached Surface: Game Over");
+            if (other.gameObject.tag == "Enemy")
+            {
+                other.gameObject.GetComponent<Enemy>().RushToCenter();
+                TriggerGameOver();
+                Debug.Log("Enemy Reached Surface: Game Over");
+            }
         }
     }
 

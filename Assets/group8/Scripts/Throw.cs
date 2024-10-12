@@ -123,7 +123,7 @@ public class Throw : MonoBehaviour
 
     void CreateBomb(Vector3 startPoint, Vector3 startVelocity)
     {
-        Rigidbody rb = Instantiate(thrownObject, startPoint, Quaternion.identity).GetComponent<Rigidbody>();
+        Rigidbody rb = Instantiate(thrownObject, startPoint, Quaternion.Euler(0, 0, 30)).GetComponent<Rigidbody>();
         rb.velocity = startVelocity;
     }
 

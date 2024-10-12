@@ -119,7 +119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ccefd1c88a1b4bf5befe039842a275b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToSpawn: {fileID: 2530353240056141938, guid: d0e398e4135c3471eaefb1a3b7ccf6c4,
+  objectToSpawn: {fileID: 2928711780547416516, guid: 3212dd579a88241929fa5f0dcc2a8632,
     type: 3}
   numberOfObjects: 3
-  objectRadius: 0

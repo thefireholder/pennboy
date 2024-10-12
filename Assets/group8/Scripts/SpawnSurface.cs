@@ -58,7 +58,7 @@ public class SpawnSurface : MonoBehaviour
         foreach (Vector3 localPosition in spawnPositions)
         {
             Vector3 position = transform.rotation * localPosition + transform.position;
-            Instantiate(objectToSpawn, position, Quaternion.identity);
+            Instantiate(objectToSpawn, position, transform.rotation * Quaternion.Euler(-90, 0, 0));
             //Debug.Log(position);
         }
     }

@@ -23,14 +23,32 @@ public class Bomb : MonoBehaviour
     private int[] level2Score = new int[] { 3, 5, 10, 20, 30, 50};
     private System.DateTime born = System.DateTime.Now;
     public int parentsLevel = -1; // -1 means had no parent bomb
+    private bool fromCombined = false;
     ScoreManager scoreManager;
+
+    // Reference to the new material to apply
+    public Material[] level2Color;
+    private int n_material;
 
     // Start is called before the first frame update
     void Start()
     {
         if (parentsLevel != -1)
             level = parentsLevel + 1;
-        transform.localScale = Vector3.one * bombSizes[level];
+
+        // set color
+        n_material = level2Color.Length;
+        SetMaterial(level2Color[Mathf.Min(level, n_material)]);
+
+        // set size
+        if (fromCombined) // parentsLevel always larger than -1
+        {
+            float startSize = bombSizes[parentsLevel];
+            float endSize = bombSizes[level];
+            StartCoroutine(ScaleOverTime(startSize, endSize, 0.25f));
+        }
+        else
+            transform.localScale = Vector3.one * bombSizes[level];
 
         //Debug.Log("my level" + level);
         scoreManager = FindObjectOfType<ScoreManager>();
@@ -75,11 +93,17 @@ public class Bomb : MonoBehaviour
 
                     // create bomb and set its parentslevel
                     var newBomb = Instantiate(childBomb, newPosition, Quaternion.identity);
-                    newBomb.GetComponent<Bomb>().parentsLevel = level;
+                    Bomb bombProperty = newBomb.GetComponent<Bomb>();
+                    bombProperty.parentsLevel = level;
+                    bombProperty.fromCombined = true;
 
                     // add score
                     int score = level2Score[level];
-                    if (scoreManager != null) scoreManager.addScore(score);
+                    if (scoreManager != null)
+                    {
+                        scoreManager.addScore(score);
+                        scoreManager.reportBombLevel(level+1);
+                    }
                 }
                 Destroy(gameObject);
                 
@@ -100,9 +124,39 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    void Combine()
-    {
 
+    private IEnumerator ScaleOverTime(float startScale, float endScale, float duration)
+    {
+        float timeElapsed = 0f;
+        Vector3 initialScale = Vector3.one * startScale;
+        Vector3 targetScale = Vector3.one * endScale;
+
+        while (timeElapsed < duration)
+        {
+            // Lerp between initialScale and targetScale over time
+            transform.localScale = Vector3.Lerp(initialScale, targetScale, timeElapsed / duration);
+            timeElapsed += Time.deltaTime;
+            yield return null; // Wait until next frame
+        }
+
+        // Ensure the final scale is exactly the target scale
+        transform.localScale = targetScale;
+    }
+
+
+    // Function to change the object's material
+    public void SetMaterial(Material material)
+    {
+        Renderer renderer = GetComponent<Renderer>();
+
+        if (renderer != null)
+        {
+            renderer.material = material;
+        }
+        else
+        {
+            Debug.LogWarning("Renderer component not found on this GameObject.");
+        }
     }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public enum Phase { EnemyPhase, EnemyPhaseEnded, BombPhase, BombPhaseEnded, PlayerPhase, PlayerPhaseEnded, GameOverPhase };
 
@@ -16,14 +17,15 @@ public class WaveManager : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text bombText;
     public TMP_Text timerText;
-    public TMP_Text gameState1Text;
-    public TMP_Text gameState2Text;
+    public TMP_Text waveText; // shows the wave we are at
+    public TMP_Text gameState1Text; // GameOver text
+    public TMP_Text gameState2Text; // GameOver text
     public bool textReady = false; // depends on existance of text objects
 
     private int score = 0;
 
     [SerializeField]
-    int[] numberOfSpawnEnemy = {2,2,2,3,3,3,4,4,4,5,5,5};
+    int[] numberOfSpawnEnemy = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5 };
 
     private float playerPhaseLength = 25f;
     private float bombPhaseLength = 10f;
@@ -38,8 +40,11 @@ public class WaveManager : MonoBehaviour
     private ScoreManager scoreManager;
     private float phaseStartedAt;
     private bool hasNotGameOver = true;
-    
-    
+
+    // controlling bomb canvas
+    public Image bombCanvasImage;
+    public Sprite[] bombCanvasSprites;
+
 
     // during player phase, player plays combining game
     // during bombphase, bomb starts falling
@@ -180,6 +185,16 @@ public class WaveManager : MonoBehaviour
 
         // start bomb overflow detection
         if (overflowDetector != null) overflowDetector.InitiateDetection();
+
+        // terminate enemy reaching plane
+        if (enemyReachingPlane != null) enemyReachingPlane.TerminateDetection();
+
+        // update bomb canvas
+        if (scoreManager != null) {
+            int level = scoreManager.getHighestBombLevel();
+            ChangeBombCanvasImage(level);
+        }
+
     }
 
     void StartBombPhase()
@@ -210,8 +225,12 @@ public class WaveManager : MonoBehaviour
         // deactivate hand if it exists
         if (hand != null) hand.activateHand(false);
 
+        // enemy reaching plane starts detecting enemy
+        if (enemyReachingPlane != null) enemyReachingPlane.InitiateDetection();
+
         // increase your wave track
         waveNumber += 1;
+        waveText.text = "Wave: " + waveNumber.ToString();
 
         // make enemy climb up
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -275,5 +294,16 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if (gameState1Text != null) gameState1Text.enabled = true;
         if (gameState2Text != null) gameState2Text.enabled = true;
+    }
+
+    public void ChangeBombCanvasImage(int level)
+    {
+        if (bombCanvasImage != null)
+        {
+            if (level < bombCanvasSprites.Length)
+            {
+                bombCanvasImage.sprite = bombCanvasSprites[level];
+            }
+        }
     }
 }

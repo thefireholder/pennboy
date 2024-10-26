@@ -25,7 +25,7 @@ public class WaveManager : MonoBehaviour
     private int score = 0;
 
     [SerializeField]
-    int[] numberOfSpawnEnemy = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5 };
+    int[] numberOfSpawnEnemy = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
 
     private float playerPhaseLength = 25f;
     private float bombPhaseLength = 10f;
@@ -301,7 +301,9 @@ public class WaveManager : MonoBehaviour
     IEnumerator SpawnEnemyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        int nEnemy = numberOfSpawnEnemy[waveNumber];
+        int nEnemy = numberOfSpawnEnemy[numberOfSpawnEnemy.Length - 1];
+        if (waveNumber < numberOfSpawnEnemy.Length)
+            nEnemy = numberOfSpawnEnemy[waveNumber];
         for (int i = 0; i < spawnEnemySurfaces.Length; i++)
             spawnEnemySurfaces[i].Spawn(nEnemy);
 
@@ -316,7 +318,7 @@ public class WaveManager : MonoBehaviour
         if (gameState2Text != null) gameState2Text.enabled = true;
     }
 
-    public void ChangeBombCanvasImage(int level)
+    void ChangeBombCanvasImage(int level)
     {
         if (bombCanvasImage != null)
         {

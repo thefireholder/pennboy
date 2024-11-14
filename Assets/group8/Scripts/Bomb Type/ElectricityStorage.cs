@@ -10,15 +10,17 @@ public class ElectricityStorage : MonoBehaviour
 
     public GameObject electricity;
     public int n_electricity = 20;
+    public float splitLikelihood = 0.6f;
     public int n_split_ = 2;
-    public int n_trav_ = 8;
-    public int n_consider_ = 2;
+    public int n_trav_ = 6;
+    public int n_consider = 2;
     public float distanceLimit_ = 3;
+    public float duration = 2;
 
     [SerializeField]
-    List<GameObject> electricitys;
+    List<GameObject> electricitys = new List<GameObject>();
+    HashSet<int> activeElectricityID = new HashSet<int>();
 
-    int index = 0;
 
     void Awake()
     {
@@ -45,6 +47,7 @@ public class ElectricityStorage : MonoBehaviour
         for (int i = 0; i < n_electricity; i++)
         {
             GameObject l = Instantiate(electricity);
+            l.transform.SetParent(transform);
             l.SetActive(false);
             electricitys.Add(l);
         }
@@ -52,19 +55,65 @@ public class ElectricityStorage : MonoBehaviour
 
     public void EffectElectricity(GameObject enemy)
     {
-        Debug.Log("Thunder");
+        //Debug.Log("Thunder");
         // get tuple of affected enemies
         List<(GameObject, GameObject)> pairOfEnemies = ChooseEnemies(enemy);
 
-        // create elctric ar between them
-        foreach ((GameObject first, GameObject second) in pairOfEnemies)
+        //reserve electricity id
+        List<int> eID = reserve_eID(pairOfEnemies.Count);
+        List<(Transform, Transform, Transform, Transform, Transform)> info4returningElectricity = new List<(Transform, Transform, Transform, Transform, Transform)>();
+
+        // create elctric arc between them
+        //Debug.Log("pair " + pairOfEnemies.Count + " eid " + eID.Count);
+        for (int i = 0; i < eID.Count; i++)
         {
-            CreateElectricity(index, first, second, true);
-            index += 1;
+            (GameObject first, GameObject second) = pairOfEnemies[i];
+            CreateElectricity(eID[i], first, second, true, info4returningElectricity);
         }
+
+        // damage on Enemies
+
+        StartCoroutine(TurnOffElectricity(eID, pairOfEnemies, info4returningElectricity));
         
     }
 
+    List<int> reserve_eID(int n)
+    {
+        List<int> eID = new List<int>();
+
+        for (int i = 0; i < n_electricity; i++)
+        {
+            if (activeElectricityID.Contains(i)) continue;
+            activeElectricityID.Add(i);
+            eID.Add(i);
+            n--;
+            if (n == 0) break;
+        }
+        return eID;
+    }
+
+    IEnumerator TurnOffElectricity(List<int> eID,
+        List<(GameObject, GameObject)> pairOfEnemies,
+        List<(Transform, Transform, Transform, Transform, Transform)> info4returningElectricity)
+    {
+        yield return new WaitForSeconds(duration);
+
+        /* Damage the enemy at the end */
+        DamageEnemies(pairOfEnemies);
+
+        foreach (int i in eID)
+        {
+            Destroy(electricitys[i]);
+            electricitys[i] = Instantiate(electricity);
+            electricitys[i].SetActive(false);
+            electricitys[i].transform.SetParent(transform);
+            //electricitys[i].SetActive(false);
+        }
+        foreach (int i in eID)
+        {
+            activeElectricityID.Remove(i);
+        }
+    }
 
     public List<(GameObject, GameObject)> ChooseEnemies(GameObject enemy)
     {
@@ -82,7 +131,6 @@ public class ElectricityStorage : MonoBehaviour
 
         int n_split = n_split_;
         int n_trav = n_trav_;
-        int n_consider = n_consider_;
         float distanceLimit = distanceLimit_;
 
         HashSet<GameObject> origins = new HashSet<GameObject>();
@@ -91,7 +139,7 @@ public class ElectricityStorage : MonoBehaviour
 
         while (n_trav > 0 && origins.Count > 0)
         {
-            Debug.Log("n_trav=" + n_trav + " origins=" + origins.Count);
+            //Debug.Log("n_trav=" + n_trav + " origins=" + origins.Count);
 
             HashSet<GameObject> newOrigins = new HashSet<GameObject>();
             foreach (GameObject origin in origins)
@@ -110,13 +158,13 @@ public class ElectricityStorage : MonoBehaviour
                     .ToList();
                 }
                 if (filtered.Count == 0) {
-                    Debug.Log("breaking because zero filtered");
+                    //Debug.Log("breaking because zero filtered");
                     continue;
                 }
 
                 GameObject chosen = null;
                 GameObject newOrigin = null;
-                if (n_split > 0 && filtered.Count >= 2 && Random.Range(0f, 1f) > 0.6)
+                if (n_split > 0 && filtered.Count >= 2 && Random.Range(0f, 1f) > splitLikelihood)
                 {
                     // split
                     //Debug.Log("split");
@@ -153,7 +201,9 @@ public class ElectricityStorage : MonoBehaviour
         return gameObjectPairs;
     }
 
-    public void CreateElectricity(int index, GameObject first, GameObject second, bool straight)
+    public void CreateElectricity(int index, GameObject first, GameObject second, bool straight, List<(Transform, Transform, Transform, Transform, Transform)> info4returningElectricity)
+    /* return info4returningElectricity, which contains information of pos used for each electricity bezier, 
+     * which must be returned back to the relevant parent once we are done using it */
     {
         //Debug.Log("index " + index);
         electricitys[index].SetActive(true);
@@ -170,48 +220,49 @@ public class ElectricityStorage : MonoBehaviour
         Pos4.SetParent(second.transform);
         Pos4.localPosition = Vector3.zero;
 
+        Transform Pos2 = electricity.Find("Pos2");
+        Transform Pos3 = electricity.Find("Pos3");
+
         if (straight)
         {
-            Transform Pos2 = electricity.Find("Pos2");
             Pos2.SetParent(first.transform);
             Pos2.localPosition = Vector3.zero;
 
-            Transform Pos3 = electricity.Find("Pos3");
             Pos3.SetParent(second.transform);
             Pos3.localPosition = Vector3.zero;
         }
+        else
+        {
+            Pos2.SetParent(first.transform);
+            Pos2.localPosition = Vector3.zero;
+
+            Pos3.SetParent(second.transform);
+            Pos3.localPosition = Vector3.zero;
+        }
+
+        info4returningElectricity.Add((electricity, Pos1, Pos2, Pos3, Pos4));
     }
 
+    void DamageEnemies(List<(GameObject, GameObject)> pairOfEnemies)
+    {
+        HashSet<GameObject> enemies = new HashSet<GameObject>();
+        foreach ((GameObject first, GameObject second) in pairOfEnemies)
+        {
+            enemies.Add(first);
+            enemies.Add(second);
+        }
 
-    //public void FindNearbyEnemy(float radius, List<GameObject> filteredEnemies)
-    //{
+        foreach (GameObject enemy in enemies)
+        {
+            if (enemy == null)
+            {
+                Debug.Log("Accesing dead enemy");
+            }
+            else
+            {
+                enemy.GetComponent<Enemy>().Damage(3);
+            }
+        }
 
-    //    // get all enemies
-    //    if (filteredEnemies == null)
-    //        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
-    //        filteredEnemies = new List<GameObject>();
-            
-
-    //    // then filter by height
-    //    foreach (GameObject enemy in allEnemies)
-    //    {
-    //        // Check height on y-axis
-    //        if (enemy.transform.position.y <= maxHeight)
-    //        {
-    //            // Calculate the distance on the xz-plane from the origin
-    //            Vector3 positionXZ = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z);
-    //            float distanceFromOriginXZ = positionXZ.magnitude;
-
-    //            // Check if the distance is within the radius threshold
-    //            if (distanceFromOriginXZ <= radiusThreshold)
-    //            {
-    //                filteredEnemies.Add(enemy);
-    //            }
-    //        }
-    //    }
-        
-    //    // then filter by nearby
-
-    //    return ;
-    //}
+    }
 }

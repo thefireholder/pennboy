@@ -117,10 +117,8 @@ public class Bomb : MonoBehaviour
             {
                 if (hitCollider.gameObject.tag == "Enemy")
                 {
-                    //hitCollider.GetComponent<Enemy>().TouchedByBomb(0);
-
-                    // electricity
-                    ElectricityStorage.Instance.EffectElectricity(hitCollider.gameObject);
+                    Debug.Log("enemy touched with level" + level);
+                    hitCollider.GetComponent<Enemy>().TouchedByBomb(level);
                 }
                 Destroy(gameObject);
             }

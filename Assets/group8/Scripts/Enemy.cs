@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     private ScoreManager scoreManager;
     public Material[] materials;
     public int colorChoice = 0;
+    public float health = 3f;
 
     private Rigidbody rb;
 
@@ -33,7 +34,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void ClimbUp(float duration)
@@ -49,9 +49,31 @@ public class Enemy : MonoBehaviour
         StartCoroutine(MoveOverTime(transform.position, transform.position + upward, duration));
     }
 
-    public void TouchedByBomb(int type)
+    public void TouchedByBomb(int type, float damage=3)
     {
-        FlyAway();
+        //Debug.Log("what type" + type);
+        if (type == 4)
+        {
+            // electricity type
+            if (ElectricityStorage.Instance != null)
+                ElectricityStorage.Instance.EffectElectricity(gameObject);
+        }
+        else
+        {
+            Damage(damage, type);
+        }
+    }
+
+    public void Damage(float damage, int type=0)
+    {
+        // skip killing if health is already below. not good to trigger destroy twice
+        if (health <= 0) return;
+
+        health -= damage;
+        if (health <= 0)
+        {
+            FlyAway();
+        }
     }
 
 
@@ -124,5 +146,8 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+        // it seems its possible to access destroyed enemy due to race condition, hence this delay
+        //yield return new WaitForSeconds(delay + 1);
+        //Destroy(gameObject);
     }
 }

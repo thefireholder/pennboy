@@ -9,7 +9,11 @@ public class ElectricityStorage : MonoBehaviour
     public static ElectricityStorage Instance { get; private set; }
 
     public GameObject electricity;
-    public int n_electricity = 10;
+    public int n_electricity = 20;
+    public int n_split_ = 2;
+    public int n_trav_ = 8;
+    public int n_consider_ = 2;
+    public float distanceLimit_ = 3;
 
     [SerializeField]
     List<GameObject> electricitys;
@@ -48,6 +52,7 @@ public class ElectricityStorage : MonoBehaviour
 
     public void EffectElectricity(GameObject enemy)
     {
+        Debug.Log("Thunder");
         // get tuple of affected enemies
         List<(GameObject, GameObject)> pairOfEnemies = ChooseEnemies(enemy);
 
@@ -75,25 +80,74 @@ public class ElectricityStorage : MonoBehaviour
         HashSet<GameObject> setEnemies = new HashSet<GameObject>();
         foreach (GameObject other in allEnemies) setEnemies.Add(other);
 
-        int n_split = 3;
-        int i_split = 1;
-        int n_trav = 5;
-        int n_consider = 2;
+        int n_split = n_split_;
+        int n_trav = n_trav_;
+        int n_consider = n_consider_;
+        float distanceLimit = distanceLimit_;
 
-        while (n_trav > 0)
+        HashSet<GameObject> origins = new HashSet<GameObject>();
+        origins.Add(enemy);
+        setEnemies.Remove(enemy);
+
+        while (n_trav > 0 && origins.Count > 0)
         {
-            Vector3 enemyPos = enemy.transform.position;
-            List<GameObject> filtered = setEnemies
-                .Where(obj => obj.transform.position.y > enemyPos.y)
-                .OrderBy(obj => Vector3.Distance(enemyPos, obj.transform.position))
-                .Take(n_consider)
-                .ToList();
-            if (filtered.Count == 0) break;
-            GameObject chosen = filtered[Random.Range(0, Mathf.Min(n_consider, filtered.Count))];
-            gameObjectPairs.Add((enemy, chosen));
-            setEnemies.Remove(chosen);
-            enemy = chosen;
-            n_trav -= 1;
+            Debug.Log("n_trav=" + n_trav + " origins=" + origins.Count);
+
+            HashSet<GameObject> newOrigins = new HashSet<GameObject>();
+            foreach (GameObject origin in origins)
+            {
+                Vector3 originPos = origin.transform.position;
+                List<GameObject> filtered = setEnemies
+                    .Where(obj => (obj.transform.position.y > originPos.y) && (Vector3.Distance(originPos, obj.transform.position) < distanceLimit) )
+                    .OrderBy(obj => Vector3.Distance(originPos, obj.transform.position))
+                    .Take(n_consider)
+                    .ToList();
+                if (filtered.Count == 0)
+                {
+                    filtered = setEnemies
+                    .Where(obj => Vector3.Distance(originPos, obj.transform.position) < distanceLimit)
+                    .Take(n_consider)
+                    .ToList();
+                }
+                if (filtered.Count == 0) {
+                    Debug.Log("breaking because zero filtered");
+                    continue;
+                }
+
+                GameObject chosen = null;
+                GameObject newOrigin = null;
+                if (n_split > 0 && filtered.Count >= 2 && Random.Range(0f, 1f) > 0.6)
+                {
+                    // split
+                    //Debug.Log("split");
+                    chosen = filtered[0];
+                    newOrigin = filtered[1];
+                    //Debug.Log("chose: " + chosen.name);
+                    //Debug.Log("newOrigin: " + newOrigin.name);
+                }
+                else
+                {
+                    // random choice
+                    chosen = filtered[Random.Range(0, Mathf.Min(n_consider, filtered.Count))];
+                    //Debug.Log("chose: " + chosen.name);
+                }
+
+                gameObjectPairs.Add((origin, chosen));
+                setEnemies.Remove(chosen);
+                newOrigins.Add(chosen);
+                n_trav -= 1;
+
+                if (newOrigin != null)
+                {
+                    gameObjectPairs.Add((origin, newOrigin));
+                    setEnemies.Remove(newOrigin);
+                    newOrigins.Add(newOrigin);
+                    n_split -= 1;
+                    n_trav -= 1;
+                }
+            }
+            origins = newOrigins;
+
         }
 
         return gameObjectPairs;
@@ -101,7 +155,7 @@ public class ElectricityStorage : MonoBehaviour
 
     public void CreateElectricity(int index, GameObject first, GameObject second, bool straight)
     {
-        Debug.Log("index " + index);
+        //Debug.Log("index " + index);
         electricitys[index].SetActive(true);
 
         Transform electricity = electricitys[index].transform;

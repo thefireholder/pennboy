@@ -11,8 +11,8 @@ public class Bomb : MonoBehaviour
 
     // Constants
     public GameObject childBomb;
-
     
+
 
     // changeable variables
     public int level = 0;
@@ -117,7 +117,10 @@ public class Bomb : MonoBehaviour
             {
                 if (hitCollider.gameObject.tag == "Enemy")
                 {
-                    hitCollider.GetComponent<Enemy>().TouchedByBomb(0);
+                    //hitCollider.GetComponent<Enemy>().TouchedByBomb(0);
+
+                    // electricity
+                    ElectricityStorage.Instance.EffectElectricity(hitCollider.gameObject);
                 }
                 Destroy(gameObject);
             }

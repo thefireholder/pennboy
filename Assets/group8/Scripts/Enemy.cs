@@ -34,6 +34,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
     }
 
     public void ClimbUp(float duration)
@@ -57,6 +58,12 @@ public class Enemy : MonoBehaviour
             // electricity type
             if (ElectricityStorage.Instance != null)
                 ElectricityStorage.Instance.EffectElectricity(gameObject);
+        }
+        else if (type == 5)
+        {
+            // ice type
+            if (IceStorage.Instance != null)
+                IceStorage.Instance.EffectIce(gameObject);
         }
         else
         {

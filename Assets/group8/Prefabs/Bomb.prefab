@@ -147,6 +147,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   childBomb: {fileID: 6597882995429004002}
+  FireBombVFX: {fileID: 5055103450451034118, guid: 07ff70285a35642e4a722e3cbcbadbd2,
+    type: 3}
   level: 0
   newBombPositionParameter: 0.5
   parentsLevel: -1

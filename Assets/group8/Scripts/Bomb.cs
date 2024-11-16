@@ -11,8 +11,7 @@ public class Bomb : MonoBehaviour
 
     // Constants
     public GameObject childBomb;
-
-    
+    public GameObject FireBombVFX;
 
     // changeable variables
     public int level = 0;
@@ -113,11 +112,14 @@ public class Bomb : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, bombSizes[level] + 1);
+            GameObject explosionVFX = Instantiate(FireBombVFX);
+            explosionVFX.transform.localScale *= (bombSizes[level] + 1) / 2.5f;
+            explosionVFX.transform.position = transform.position;
             foreach (var hitCollider in hitColliders)
             {
                 if (hitCollider.gameObject.tag == "Enemy")
                 {
-                    hitCollider.GetComponent<Enemy>().TouchedByBomb(0);
+                    hitCollider.GetComponent<Enemy>().TouchedByBomb(level);
                 }
                 Destroy(gameObject);
             }

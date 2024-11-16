@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+	[Header("Climb Variables")]
     public float phaseLength = 10f;
     public float climbHeight = 3f;
     public float initialClimbHeight = 3f;
@@ -11,11 +12,23 @@ public class Enemy : MonoBehaviour
     public float initalVariation = 2f;
     private bool isFirstClimb = true;
 
+    [Header("Flight Variables")]
     public float flyLength = 3f;
     public float flyDuration = 2f;
+
+    [Header("Miscellaneous")]
     private ScoreManager scoreManager;
     public Material[] materials;
     public int colorChoice = 0;
+
+    [Header("Damage Variables")]
+    public float HP = 6;
+    private bool burning = false;
+    private IEnumerator burn;
+    public bool dead = false;
+    public float burnDPS = 10f;
+    public float onDeathFirebombRadius = 1f;
+    public GameObject BombVFX;
 
     private Rigidbody rb;
 
@@ -51,7 +64,73 @@ public class Enemy : MonoBehaviour
 
     public void TouchedByBomb(int type)
     {
-        FlyAway();
+    	// executes bomb effect
+    	switch(type)
+    	{
+    		case 0: // Firebomb
+    			burning = true;
+    			burn = FireBurn(10f);
+        		TakeDamage(1f);
+        		if (burning)
+     			{
+     				StopCoroutine(burn);
+     			}
+     			StartCoroutine(burn);
+    			break;
+    		default:
+    			TakeDamage(10f);
+    			break;
+    	}
+    }
+
+    public void TakeDamage(float dmg){
+    	if (!dead) {
+	    	HP -= dmg;
+	    	Debug.Log(HP);
+	    	if (HP <= 0f)
+	    	{
+	    		dead = true;
+	    		if (burning) 
+	    		{
+	    			//DebugExplosionSphere(onDeathFirebombRadius);
+	    			OnDeathFireBomb(onDeathFirebombRadius);
+	    		}
+	    		FlyAway();
+	    	}
+	    }
+    }
+
+    IEnumerator FireBurn(float duration){
+    	for (float t = 0f; t < duration; t += Time.deltaTime)
+    	{
+    		TakeDamage(burnDPS * Time.deltaTime);
+    		yield return null;
+    	}
+    	burning = false;
+    }
+
+    public void DebugExplosionSphere(float radius){
+    	GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
+    	sphere.transform.position = transform.position;
+    	sphere.transform.localScale *= radius / 0.5f;
+    }
+
+    public void OnDeathFireBomb(float radius)
+    {
+    	Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+ 		GameObject explosion = Instantiate(BombVFX);
+ 		explosion.transform.localScale *= radius / 2.5f;
+ 		explosion.transform.position = transform.position;
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.gameObject.tag == "Enemy" && gameObject != hitCollider.gameObject)
+            {	
+            	if (!hitCollider.GetComponent<Enemy>().dead){
+            		hitCollider.GetComponent<Enemy>().onDeathFirebombRadius = onDeathFirebombRadius * 0.9f;
+        			hitCollider.GetComponent<Enemy>().TouchedByBomb(0);
+            	}
+            }
+        } 
     }
 
 
@@ -61,6 +140,7 @@ public class Enemy : MonoBehaviour
 
         //StartCoroutine(MoveOverTime(transform.position, transform.position + Random.onUnitSphere * flyLength, flyDuration));
         //Destroy(gameObject);
+        dead = true;
         rb.isKinematic = false;
         rb.velocity = Random.onUnitSphere * flyLength;
         StartCoroutine(DelayedDeath(flyDuration));

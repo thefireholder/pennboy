@@ -36,7 +36,7 @@ public class IceStorage : MonoBehaviour
         Debug.Log("Effect Ice ended");
 
         // damage on Enemies
-        enemy.GetComponent<Enemy>().iceFreeze(3);
+        enemy.GetComponent<Enemy>().iceFreeze(10);
         enemy.GetComponent<Enemy>().Damage(1);
     }
 

@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spid
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f87ca0bb6d25c4d7a839351e68fbb92e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -154,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phaseLength: 10
   climbHeight: 3
-  initialClimbHeight: 6
+  initialClimbHeight: 5
   variation: 0.5
   initalVariation: 0.5
   flyLength: 20

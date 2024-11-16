@@ -27,12 +27,25 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        //if (rb == null)
+        //{
+        //    StartCoroutine(AddRigid());
+        //}
         scoreManager = FindObjectOfType<ScoreManager>();
         //if (colorChoice == -1)
         //    ChooseColor(Random.Range(0,2));
         //else
         //ChooseColor(colorChoice);
     }
+
+    //IEnumerator AddRigid();
+    //{
+        
+    //    rb = gameObject.AddComponent<Rigidbody>();
+    //    rb.isKinematic = true;
+    //    Debug.Log("added rigid");
+    //}
+
 
     // Update is called once per frame
     void Update()

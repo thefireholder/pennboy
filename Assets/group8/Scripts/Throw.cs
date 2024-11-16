@@ -27,6 +27,7 @@ public class Throw : MonoBehaviour
 
     public float rateBySeconds = 1; // 2 means 2 bomb per seconds
     int bombCreationLevel = 0;
+    public int overrideTestBomb = -1; // anything other than -1 will allow you to test with different level bomb
 
     [SerializeField]
     private float angle = 30;
@@ -119,6 +120,7 @@ public class Throw : MonoBehaviour
         Rigidbody rb = bomb.GetComponent<Rigidbody>();
         rb.velocity = startVelocity;
         int level = Random.Range(0, bombCreationLevel+1);
+        level = (overrideTestBomb == -1) ? level : overrideTestBomb;
         bomb.GetComponent<Bomb>().level = level;
         bomb.GetComponent<Bomb>().parentsLevel = level - 1;
 

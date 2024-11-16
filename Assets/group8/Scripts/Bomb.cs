@@ -119,6 +119,8 @@ public class Bomb : MonoBehaviour
             {
                 if (hitCollider.gameObject.tag == "Enemy")
                 {
+
+                    Debug.Log("enemy touched with level" + level);
                     hitCollider.GetComponent<Enemy>().TouchedByBomb(level);
                 }
                 Destroy(gameObject);

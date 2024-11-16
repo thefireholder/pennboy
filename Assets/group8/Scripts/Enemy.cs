@@ -30,6 +30,10 @@ public class Enemy : MonoBehaviour
     public float onDeathFirebombRadius = 1f;
     public GameObject BombVFX;
 
+    public string effectStatus = "normal";
+    int freezeCounter = 0;
+    public int freezeStatusDamage = 1;
+
     private Rigidbody rb;
 
     // Start is called before the first frame update
@@ -51,6 +55,13 @@ public class Enemy : MonoBehaviour
 
     public void ClimbUp(float duration)
     {
+        // if frozen should not climb
+        if (freezeCounter > 0)
+        {
+            freezeCounter--;
+            TakeDamage(freezeStatusDamage);
+            return;
+        }
         // should climb up every wave
         float upMagnitude = (climbHeight + Random.Range(-1f, 1f) * variation);
         if (isFirstClimb)
@@ -60,27 +71,6 @@ public class Enemy : MonoBehaviour
         }   
         Vector3 upward = Vector3.up * upMagnitude;
         StartCoroutine(MoveOverTime(transform.position, transform.position + upward, duration));
-    }
-
-    public void TouchedByBomb(int type)
-    {
-    	// executes bomb effect
-    	switch(type)
-    	{
-    		case 0: // Firebomb
-    			burning = true;
-    			burn = FireBurn(10f);
-        		TakeDamage(1f);
-        		if (burning)
-     			{
-     				StopCoroutine(burn);
-     			}
-     			StartCoroutine(burn);
-    			break;
-    		default:
-    			TakeDamage(10f);
-    			break;
-    	}
     }
 
     public void TakeDamage(float dmg){
@@ -133,6 +123,42 @@ public class Enemy : MonoBehaviour
         } 
     }
 
+
+    public void TouchedByBomb(int type, float damage=3)
+    {
+    	// executes bomb effect
+    	switch(type)
+    	{
+    		case 0: // Firebomb
+    			burning = true;
+    			burn = FireBurn(10f);
+        		TakeDamage(1f);
+        		if (burning)
+     			{
+     				StopCoroutine(burn);
+     			}
+     			StartCoroutine(burn);
+    			break;
+    		case 4: // Electricity type
+    			if (ElectricityStorage.Instance != null)
+                	ElectricityStorage.Instance.EffectElectricity(gameObject);
+                break;
+            case 5: // ice type
+            	if (IceStorage.Instance != null)
+	                IceStorage.Instance.EffectIce(gameObject);
+	            break;
+    		default:
+    			TakeDamage(damage);
+    			break;
+    	}
+    }
+
+
+    public void iceFreeze(int count=3)
+    {
+        effectStatus = "freeze";
+        freezeCounter = count;
+    }
 
     public void FlyAway()
     {
@@ -204,5 +230,9 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+
     }
 }
+        // it seems its possible to access destroyed enemy due to race condition, hence this delay
+        //yield return new WaitForSeconds(delay + 1);
+        //Destroy(gameObject);

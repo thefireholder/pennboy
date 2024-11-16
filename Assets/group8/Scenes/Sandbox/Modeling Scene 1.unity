@@ -176,7 +176,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.01052352
-  m_Center: {x: -0.00005039014, y: 0.00011273008, z: 0.004604604}
+  m_Center: {x: -0.00005039014, y: 0.00011273008, z: 0}
 --- !u!1 &160095167
 GameObject:
   m_ObjectHideFlags: 0
@@ -1759,7 +1759,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a50d2da45ec154fa1aae888850d3b28f, type: 2}
+      objectReference: {fileID: 2100000, guid: 4b8e84fc00563ab428d280f2c65f7bf2, type: 2}
     - target: {fileID: 919132149155446097, guid: f7639691711b3ee478493ddbfca54c70,
         type: 3}
       propertyPath: m_Name

@@ -17,6 +17,9 @@ public class Enemy : MonoBehaviour
     public Material[] materials;
     public int colorChoice = 0;
     public float health = 3f;
+    public string effectStatus = "normal";
+    int freezeCounter = 0;
+    public int freezeStatusDamage = 1;
 
     private Rigidbody rb;
 
@@ -39,6 +42,13 @@ public class Enemy : MonoBehaviour
 
     public void ClimbUp(float duration)
     {
+        // if frozen should not climb
+        if (freezeCounter > 0)
+        {
+            freezeCounter--;
+            Damage(freezeStatusDamage);
+            return;
+        }
         // should climb up every wave
         float upMagnitude = (climbHeight + Random.Range(-1f, 1f) * variation);
         if (isFirstClimb)
@@ -63,12 +73,21 @@ public class Enemy : MonoBehaviour
         {
             // ice type
             if (IceStorage.Instance != null)
+            {
                 IceStorage.Instance.EffectIce(gameObject);
+            }
+                
         }
         else
         {
             Damage(damage, type);
         }
+    }
+
+    public void iceFreeze(int count=3)
+    {
+        effectStatus = "freeze";
+        freezeCounter = count;
     }
 
     public void Damage(float damage, int type=0)

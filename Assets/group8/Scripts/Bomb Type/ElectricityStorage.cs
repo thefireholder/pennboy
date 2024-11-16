@@ -70,8 +70,7 @@ public class ElectricityStorage : MonoBehaviour
             CreateElectricity(eID[i], first, second, true, info4returningElectricity);
         }
 
-        // damage on Enemies
-
+        // damage on Enemies & turn off electricity
         StartCoroutine(TurnOffElectricity(eID, pairOfEnemies, info4returningElectricity));
         
     }

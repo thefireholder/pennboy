@@ -112,9 +112,12 @@ public class Bomb : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, bombSizes[level] + 1);
-            GameObject explosionVFX = Instantiate(FireBombVFX);
-            explosionVFX.transform.localScale *= (bombSizes[level] + 1) / 2.5f;
-            explosionVFX.transform.position = transform.position;
+            if (level == 1 || level == 2)
+            {
+                GameObject explosionVFX = Instantiate(FireBombVFX);
+                explosionVFX.transform.localScale *= (bombSizes[level] + 1) / 2.5f;
+                explosionVFX.transform.position = transform.position;
+            }
             foreach (var hitCollider in hitColliders)
             {
                 if (hitCollider.gameObject.tag == "Enemy")

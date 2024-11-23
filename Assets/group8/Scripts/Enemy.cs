@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     public int colorChoice = 0;
 
     [Header("Damage Variables")]
-    public float HP = 6;
+    public float HP = 1;
     private bool burning = false;
     private IEnumerator burn;
     public bool dead = false;

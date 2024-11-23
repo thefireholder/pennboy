@@ -258,7 +258,7 @@ public class ElectricityStorage : MonoBehaviour
             }
             else
             {
-                enemy.GetComponent<Enemy>().Damage(3);
+                enemy.GetComponent<Enemy>().TakeDamage(3);
             }
         }
 

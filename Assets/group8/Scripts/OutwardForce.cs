@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* legacy code; no longer used from v6 main scene */
 public class OutwardForce : MonoBehaviour
 {
     public Vector3 startScale;   // The starting Scale

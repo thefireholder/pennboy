@@ -29,6 +29,9 @@ public class Bomb : MonoBehaviour
     public Material[] level2Color;
     private int n_material;
 
+    private bool isRollingDownSideOfTower = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +59,6 @@ public class Bomb : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     void OnCollisionEnter(Collision collision)
@@ -168,9 +170,36 @@ public class Bomb : MonoBehaviour
 
     public void RollDownTheSideOfTower()
     {
-        Vector3 dir = Vector3.zero - transform.position;
-        dir.y = transform.position.y;
-        GetComponent<Rigidbody>().AddForce(dir*10);
+        // needs to run exactly once
+        if (!isRollingDownSideOfTower)
+        {
+            isRollingDownSideOfTower = true;
+            StartCoroutine(DoRollDownSideOfTower());
+            Debug.Log("bomb has been pushed off");
+        }
+        //StartCoroutine();
+    }
+
+    IEnumerator DoRollDownSideOfTower(float frequency=5, float duration = 2, float strength = 100)
+    {
+
+        for (int i = 0; i < frequency; i++)
+        {
+            Vector3 dir = Vector3.zero - transform.position;
+            dir.y = 0;
+            dir /= dir.magnitude;
+            float magnitude = strength * (1 - (i / frequency));
+            // increasing magnitude over time
+
+            // Move bomb
+            GetComponent<Rigidbody>().AddForce(dir * magnitude);
+
+            // Wait for 0.5 seconds
+            yield return new WaitForSeconds(duration / frequency);
+        }
+
+        
+        
     }
 
 

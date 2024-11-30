@@ -35,6 +35,7 @@ public class WaveManager : MonoBehaviour
     private SpawnSurface[] spawnEnemySurfaces;
     private Throw hand;
     private OverflowDetector overflowDetector;
+    private BombPusher bombPusher;
     private EnemyReachingPlane enemyReachingPlane;
     private CameraView cameraView;
     private ScoreManager scoreManager;
@@ -60,6 +61,7 @@ public class WaveManager : MonoBehaviour
         spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
         hand = FindObjectOfType<Throw>();
         overflowDetector = FindObjectOfType<OverflowDetector>();
+        bombPusher = FindObjectOfType<BombPusher>();
         enemyReachingPlane = FindObjectOfType<EnemyReachingPlane>();
         cameraView = FindObjectOfType<CameraView>();
         scoreManager = FindObjectOfType<ScoreManager>();
@@ -222,9 +224,10 @@ public class WaveManager : MonoBehaviour
         if (cameraView != null) cameraView.ZoomOut();
 
         // push bomnbs off
-        if (bombPushingObject != null)
+        if (bombPusher != null)
         {
-            bombPushingObject.pushBombsOff(bombPhaseLength * 2/3);
+            //bombPushingObject.pushBombsOff(bombPhaseLength * 2/3);
+            bombPusher.pushBombsOff(10, 3f, 5);
         }
     }
 

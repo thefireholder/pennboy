@@ -42,27 +42,27 @@ public class Forest : MonoBehaviour
             //    tree.position = originalPos[i] * (alpha / threshold) + newPos[i] * (1-(alpha / threshold));
             //}
 
-            if (alpha > threshold)
-            {
-                MeshRenderer meshRenderer = tree.GetComponent<MeshRenderer>();
-                foreach (Material mat in meshRenderer.materials)
-                {
-                    Color color = mat.color;
-                    color.a = 1f;
-                    mat.color = color;
-                }
-            }
-            else
-            {
-                MeshRenderer meshRenderer = tree.GetComponent<MeshRenderer>();
-                foreach (Material mat in meshRenderer.materials)
-                {
-                    Color color = mat.color;
-                    color.a = 0.5f; //  1f * (alpha / threshold) + 0.5f * (1 - (alpha / threshold));
-                    Debug.Log(color.a);
-                    mat.color = color;
-                }
-            }
+            //if (alpha > threshold)
+            //{
+            //    MeshRenderer meshRenderer = tree.GetComponent<MeshRenderer>();
+            //    foreach (Material mat in meshRenderer.materials)
+            //    {
+            //        Color color = mat.color;
+            //        color.a = 1f;
+            //        mat.color = color;
+            //    }
+            //}
+            //else
+            //{
+            //    MeshRenderer meshRenderer = tree.GetComponent<MeshRenderer>();
+            //    foreach (Material mat in meshRenderer.materials)
+            //    {
+            //        Color color = mat.color;
+            //        color.a = 0.5f; //  1f * (alpha / threshold) + 0.5f * (1 - (alpha / threshold));
+            //        Debug.Log(color.a);
+            //        mat.color = color;
+            //    }
+            //}
                 
 
 

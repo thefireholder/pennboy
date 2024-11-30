@@ -31,7 +31,6 @@ public class WaveManager : MonoBehaviour
     private float bombPhaseLength = 10f;
     private float enemyPhaseLength = 2f;
     private float bombCleanUpHeight = 3f;
-    private OutwardForce bombPushingObject;
     private SpawnSurface[] spawnEnemySurfaces;
     private Throw hand;
     private OverflowDetector overflowDetector;
@@ -57,7 +56,6 @@ public class WaveManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bombPushingObject = FindObjectOfType<OutwardForce>();
         spawnEnemySurfaces = FindObjectsOfType<SpawnSurface>();
         hand = FindObjectOfType<Throw>();
         overflowDetector = FindObjectOfType<OverflowDetector>();

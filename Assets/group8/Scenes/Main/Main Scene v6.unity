@@ -5499,6 +5499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02591483e83884ed1aef9a8e0fbdb774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetCollider: {fileID: 0}
 --- !u!136 &749103927
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7307,6 +7308,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closePos: {x: 0, y: 0, z: 0}
   closeRot: {x: 30, y: 0, z: 0}
+  farPos: {x: 0, y: 6, z: -14}
+  farRot: {x: 38, y: 0, z: 0}
   posAdjustment: {x: 0, y: 0, z: 0}
   rotAdjustment: {x: 0, y: 0, z: 0}
 --- !u!1001 &936874385
@@ -13511,6 +13514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02f5fbe75be7b47be95fc1e022c51cf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  viewAngle: 90
+  renderDistance: 50
+  fadeSpeed: 2
 --- !u!1 &1917598447
 GameObject:
   m_ObjectHideFlags: 0

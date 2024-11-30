@@ -11,8 +11,8 @@ public class CameraView : MonoBehaviour
     //Vector3 farRot = new Vector3(22.5f, 0, 0);
     public Vector3 closePos = new Vector3(0, 0, 0);
     public Vector3 closeRot = new Vector3(30, 0, 0);
-    Vector3 farPos = new Vector3(0, 6, -14);
-    Vector3 farRot = new Vector3(38, 0, 0);
+    public Vector3 farPos = new Vector3(0, 6, -14);
+    public Vector3 farRot = new Vector3(38, 0, 0);
     public Vector3 posAdjustment;
     public Vector3 rotAdjustment;
 

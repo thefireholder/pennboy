@@ -22,6 +22,9 @@ public class Enemy : MonoBehaviour
     public int colorChoice = 0;
 
     [Header("Damage Variables")]
+    private EnemyUI enemyUI;
+    public float LV = 1;
+    public float maxHP;
     public float HP = 1;
     private bool burning = false;
     private IEnumerator burn;
@@ -41,6 +44,13 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         scoreManager = FindObjectOfType<ScoreManager>();
+        enemyUI = GetComponentInChildren<EnemyUI>();
+        maxHP = HP;
+        if (enemyUI != null)
+        {
+            enemyUI.UpdateHealthBar(HP, maxHP);
+            enemyUI.UpdateLv(LV);
+        }
         //if (colorChoice == -1)
         //    ChooseColor(Random.Range(0,2));
         //else
@@ -50,7 +60,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void ClimbUp(float duration)
@@ -76,8 +85,9 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float dmg){
     	if (!dead) {
 	    	HP -= dmg;
-	    	Debug.Log(HP);
-	    	if (HP <= 0f)
+	    	//Debug.Log(HP);
+            if (enemyUI != null) enemyUI.UpdateHealthBar(HP, maxHP);
+            if (HP <= 0f)
 	    	{
 	    		dead = true;
 	    		if (burning) 

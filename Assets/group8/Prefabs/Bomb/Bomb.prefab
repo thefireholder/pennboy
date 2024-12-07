@@ -146,7 +146,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf22ff05ca470459a82df5f4d87af02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  childBomb: {fileID: 6597882995429004002}
+  basicBomb: {fileID: 6597882995429004002}
+  fleshBomb: {fileID: 1773364146057686765, guid: d563c519893b247f8b1832eeed781635,
+    type: 3}
+  magmaBomb: {fileID: 6597882995429004002, guid: a2599e726e4c7400fad4193f97c2a643,
+    type: 3}
   FireBombVFX: {fileID: 5055103450451034118, guid: 07ff70285a35642e4a722e3cbcbadbd2,
     type: 3}
   level: 0
@@ -154,10 +158,13 @@ MonoBehaviour:
   parentsLevel: -1
   level2Color:
   - {fileID: 2100000, guid: db7c07384bb9c4b27a2bcde81e20ebb6, type: 2}
-  - {fileID: 2100000, guid: 164becfc5d40e494f9a777ebc7c2dcdc, type: 2}
+  - {fileID: 2100000, guid: 3d9c9b46fa761384ea8f85fabeee7d36, type: 2}
   - {fileID: 2100000, guid: 266d2b4bc1e83489dba189ee1d3a71b6, type: 2}
   - {fileID: 2100000, guid: 4a35533fb7b2c488786e151065d50542, type: 2}
   - {fileID: 2100000, guid: 8c8f554b079b047e193bd9f78ee0a17a, type: 2}
-  - {fileID: 2100000, guid: 20240e63930ee42858b97e620dde494d, type: 2}
+  - {fileID: 2100000, guid: 56107bbdc114741488393158a9e65b39, type: 2}
   - {fileID: 2100000, guid: 54fefa3d668794aa4b72f0e9020d09be, type: 2}
   - {fileID: 2100000, guid: a50d2da45ec154fa1aae888850d3b28f, type: 2}
+  magmaMaterial:
+  - {fileID: -3846018093981099296, guid: 5fc6c80f79d4b40fd873674939d68175, type: 3}
+  - {fileID: 2100000, guid: 4396e6ab3db5f4f05a8b33ddeb3e1677, type: 2}

@@ -10,7 +10,9 @@ public class Bomb : MonoBehaviour
      * */
 
     // Constants
-    public GameObject childBomb;
+    public GameObject basicBomb;
+    public GameObject fleshBomb;
+    public GameObject magmaBomb;
     public GameObject FireBombVFX;
 
     // changeable variables
@@ -27,6 +29,7 @@ public class Bomb : MonoBehaviour
 
     // Reference to the new material to apply
     public Material[] level2Color;
+    public Material[] magmaMaterial;
     private int n_material;
 
     private bool isRollingDownSideOfTower = false;
@@ -93,7 +96,11 @@ public class Bomb : MonoBehaviour
                     Vector3 newPosition = alpha * bornFirstPosition + (1 - alpha) * bornSecondPosition;
 
                     // create bomb and set its parentslevel
-                    var newBomb = Instantiate(childBomb, newPosition, Quaternion.identity);
+                    GameObject newBomb;
+                    if (level == 5) newBomb = Instantiate(fleshBomb, newPosition, Quaternion.identity);
+                    else if (level == 2) newBomb = Instantiate(magmaBomb, newPosition, Quaternion.identity);
+                    else newBomb = Instantiate(basicBomb, newPosition, Quaternion.identity);
+
                     Bomb bombProperty = newBomb.GetComponent<Bomb>();
                     bombProperty.parentsLevel = level;
                     bombProperty.fromCombined = true;
@@ -160,7 +167,10 @@ public class Bomb : MonoBehaviour
 
         if (renderer != null)
         {
-            renderer.material = material;
+            if (renderer.materials.Length == 1)
+                renderer.material = material;
+            else if (renderer.materials.Length == 2)
+                renderer.materials = magmaMaterial;
         }
         else
         {

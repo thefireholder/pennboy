@@ -85,7 +85,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float dmg){
     	if (!dead) {
 	    	HP -= dmg;
-	    	//Debug.Log(HP);
+	    	Debug.Log("damage taken " + HP);
             if (enemyUI != null) enemyUI.UpdateHealthBar(HP, maxHP);
             if (HP <= 0f)
 	    	{
@@ -140,16 +140,19 @@ public class Enemy : MonoBehaviour
     	switch(type)
     	{
     		case 0: // Firebomb
-    			burning = true;
-    			burn = FireBurn(10f);
-        		TakeDamage(1f);
-        		if (burning)
-     			{
-     				StopCoroutine(burn);
-     			}
-     			StartCoroutine(burn);
+        		TakeDamage(1);
     			break;
-    		case 4: // Electricity type
+            case 1: // Firebomb
+                burning = true;
+                burn = FireBurn(10f);
+                TakeDamage(3);
+                if (burning)
+                {
+                    StopCoroutine(burn);
+                }
+                StartCoroutine(burn);
+                break;
+            case 4: // Electricity type
     			if (ElectricityStorage.Instance != null)
                 	ElectricityStorage.Instance.EffectElectricity(gameObject);
                 break;

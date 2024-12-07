@@ -151,7 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf22ff05ca470459a82df5f4d87af02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  childBomb: {fileID: 1773364146057686765}
+  basicBomb: {fileID: 6597882995429004002, guid: 239356ef7454e4b38bb604748c057d56,
+    type: 3}
+  fleshBomb: {fileID: 1773364146057686765}
+  magmaBomb: {fileID: 6597882995429004002, guid: a2599e726e4c7400fad4193f97c2a643,
+    type: 3}
+  FireBombVFX: {fileID: 5055103450451034118, guid: 07ff70285a35642e4a722e3cbcbadbd2,
+    type: 3}
   level: 0
   newBombPositionParameter: 0.5
   parentsLevel: -1
@@ -164,3 +170,6 @@ MonoBehaviour:
   - {fileID: 401898565159397076, guid: 1253145e22f1b4b4ebd8ab8f6309681f, type: 3}
   - {fileID: 401898565159397076, guid: 1253145e22f1b4b4ebd8ab8f6309681f, type: 3}
   - {fileID: 401898565159397076, guid: 1253145e22f1b4b4ebd8ab8f6309681f, type: 3}
+  magmaMaterial:
+  - {fileID: -3846018093981099296, guid: 5fc6c80f79d4b40fd873674939d68175, type: 3}
+  - {fileID: 2100000, guid: 4396e6ab3db5f4f05a8b33ddeb3e1677, type: 2}

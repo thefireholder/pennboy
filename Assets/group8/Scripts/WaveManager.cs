@@ -134,6 +134,11 @@ public class WaveManager : MonoBehaviour
                 endPhase(Phase.PlayerPhase, "Overflow detected");
                 if (overflowDetector != null) overflowDetector.TerminateDetection();
             }
+            else if (Input.GetKey("space"))
+            {
+                endPhase(Phase.PlayerPhase, "User Pressed Space Bar");
+                if (overflowDetector != null) overflowDetector.TerminateDetection();
+            }
 
             float timeLeft = 1 - (currentTime - phaseStartedAt) / playerPhaseLength;
             if (timerBarSprite != null) timerBarSprite.fillAmount = timeLeft > 0 ? timeLeft : 0;

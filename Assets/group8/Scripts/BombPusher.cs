@@ -10,6 +10,7 @@ public class BombPusher : MonoBehaviour
     /* it exists to detect whether it is going to */
     void Start()
     {
+        targetCollider = GetComponent<Collider>();
     }
 
 

@@ -45,6 +45,7 @@ public class WaveManager : MonoBehaviour
     // controlling bomb canvas
     public Image bombCanvasImage;
     public Sprite[] bombCanvasSprites;
+    public Image timerBarSprite;
 
 
     // during player phase, player plays combining game
@@ -131,6 +132,9 @@ public class WaveManager : MonoBehaviour
                 endPhase(Phase.PlayerPhase, "Overflow detected");
                 if (overflowDetector != null) overflowDetector.TerminateDetection();
             }
+
+            float timeLeft = 1 - (currentTime - phaseStartedAt) / playerPhaseLength;
+            if (timerBarSprite != null) timerBarSprite.fillAmount = timeLeft > 0 ? timeLeft : 0;
 
         }
         if (currentPhase == Phase.BombPhase)

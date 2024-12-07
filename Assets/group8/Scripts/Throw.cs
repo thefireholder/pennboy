@@ -7,6 +7,7 @@ public class Throw : MonoBehaviour
 {
 
     public GameObject thrownObject;
+    public OrbitingBombs orbitingBombsPallete;
 
     public LineRenderer lineRenderer;
     [Min(3)] // ensuring that value is at least 3
@@ -26,7 +27,7 @@ public class Throw : MonoBehaviour
     public float minMag = 6.75f;
 
     public float rateBySeconds = 1; // 2 means 2 bomb per seconds
-    int bombCreationLevel = 0;
+    int bombCreationLevel = 1;
     public int overrideTestBomb = -1; // anything other than -1 will allow you to test with different level bomb
 
     [SerializeField]
@@ -44,6 +45,10 @@ public class Throw : MonoBehaviour
     private float lastThrownTime;
     private ScoreManager scoreManager;
 
+    // level generator
+    private Queue<int> bombLevelQueue;
+    int bombLevelQueueLength = 3;
+
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +57,13 @@ public class Throw : MonoBehaviour
         handActive = true;
         lastThrownTime = Time.time;
         scoreManager = FindObjectOfType<ScoreManager>();
+        //bombLevelQueue = new Queue<int>();
+
+
+        // set up orbiting bomb pallelete
+        int[] levels = { 0, 0, 0 };
+        bombLevelQueue = new Queue<int>(levels);
+        if (orbitingBombsPallete != null) orbitingBombsPallete.SetUpPallette(bombLevelQueue.ToArray());
     }
 
     public void activateHand(bool activate)
@@ -88,7 +100,17 @@ public class Throw : MonoBehaviour
                 float currentTime = Time.time;
                 if (currentTime > lastThrownTime + 1 / rateBySeconds)
                 {
-                    CreateBomb(startPoint, startVelocity);
+
+                    //int level = Random.Range(0, 4);
+                    //Debug.Log(newBombLevel);
+                    createNextLevelBomb();
+                    var bombLevels = bombLevelQueue.ToArray();
+                    int throwLevel = bombLevels[0];
+                    int newLevel = bombLevels[2];
+
+
+                    if (orbitingBombsPallete != null) orbitingBombsPallete.StartOrbit(newLevel);
+                    StartCoroutine(CreateBomb(startPoint, startVelocity, throwLevel));
                     lastThrownTime = currentTime;
 
                     //add score
@@ -114,13 +136,12 @@ public class Throw : MonoBehaviour
         return velocity;
     }
 
-    void CreateBomb(Vector3 startPoint, Vector3 startVelocity)
+    IEnumerator CreateBomb(Vector3 startPoint, Vector3 startVelocity, int level=0)
     {
+        yield return new WaitForSeconds(0.2f);
         var bomb = Instantiate(thrownObject, startPoint, Quaternion.Euler(0, 0, 30));
         Rigidbody rb = bomb.GetComponent<Rigidbody>();
         rb.velocity = startVelocity;
-        int level = Random.Range(0, bombCreationLevel+1);
-        level = (overrideTestBomb == -1) ? level : overrideTestBomb;
         bomb.GetComponent<Bomb>().level = level;
         bomb.GetComponent<Bomb>().parentsLevel = level - 1;
 
@@ -168,5 +189,15 @@ public class Throw : MonoBehaviour
         }
         return lineRendererPoints.ToArray();
 
+    }
+
+    void createNextLevelBomb()
+    {
+        int level = Random.Range(0, bombCreationLevel + 1);
+        level = (overrideTestBomb == -1) ? level : overrideTestBomb;
+
+        bombLevelQueue.Enqueue(level);
+        if (bombLevelQueue.Count > bombLevelQueueLength) bombLevelQueue.Dequeue();
+        //bombLevelQueue = 
     }
 }

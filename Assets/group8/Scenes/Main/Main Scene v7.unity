@@ -8469,6 +8469,11 @@ PrefabInstance:
       objectReference: {fileID: 46154125}
     - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
         type: 3}
+      propertyPath: maximumBomb
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
       propertyPath: currentPhase
       value: 3
       objectReference: {fileID: 0}
@@ -8489,14 +8494,83 @@ PrefabInstance:
       objectReference: {fileID: 1826920870}
     - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
         type: 3}
+      propertyPath: timerBarSprite
+      value: 
+      objectReference: {fileID: 1917598449}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
       propertyPath: bombCanvasImage
       value: 
       objectReference: {fileID: 1936707086}
     - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
         type: 3}
+      propertyPath: maxBombCanvasImage
+      value: 
+      objectReference: {fileID: 1214544332}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
       propertyPath: bombCanvasSprites.Array.size
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7b64a0f525883984bb96423697926efa,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 8cc7b7e58ebba2b43b5f2aff5aabc230,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 9e435ce69a63b0747887629ae6449dae,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 1941fd94358442744ba97b5b1580e58a,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[4]
+      value: 
+      objectReference: {fileID: 21300000, guid: 24751e0a6ab3dca49b3d1cc45f1817a5,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[5]
+      value: 
+      objectReference: {fileID: 21300000, guid: 2692ecb2501207c45add93f1c7b0fe8a,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[6]
+      value: 
+      objectReference: {fileID: 21300000, guid: 488e8d4ae149a234a9c99c5dad8188cf,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[7]
+      value: 
+      objectReference: {fileID: 21300000, guid: 6cbea6a69481ccb41a858f531d7cf1cc,
+        type: 3}
+    - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
+        type: 3}
+      propertyPath: maxBombSprites.Array.data[8]
+      value: 
+      objectReference: {fileID: 21300000, guid: 88030387f531dea458e33dd32843bf08,
+        type: 3}
     - target: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
         type: 3}
       propertyPath: bombCanvasSprites.Array.data[0]
@@ -9026,11 +9100,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: d63a5b35b9e0848e987139940492d02b, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0

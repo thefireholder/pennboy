@@ -12,7 +12,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     int waveNumber = 0;
 
-    public int maximumBomb = 10;
+    public int maximumBomb = 8;
     public bool RequirePressBarForNextPhase = false;
     public TMP_Text scoreText;
     public TMP_Text bombText;
@@ -46,6 +46,8 @@ public class WaveManager : MonoBehaviour
     public Image bombCanvasImage;
     public Sprite[] bombCanvasSprites;
     public Image timerBarSprite;
+    public Image maxBombCanvasImage;
+    public Sprite[] maxBombSprites;
 
 
     // during player phase, player plays combining game
@@ -155,6 +157,7 @@ public class WaveManager : MonoBehaviour
             scoreText.text = "Score: " + score.ToString();
             bombText.text = "MAX Bomb: " + nBomb + " / " + maximumBomb;
             timerText.text = "Time: " + timerValue.ToString();
+            maxBombCanvasImage.sprite = maxBombSprites[nBomb];
         }
 
         if (enemyReachingPlane != null)

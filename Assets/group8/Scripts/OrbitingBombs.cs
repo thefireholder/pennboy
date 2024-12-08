@@ -34,6 +34,10 @@ public class OrbitingBombs : MonoBehaviour
 
     public void SetUpPallette(int[] levels)
     {
+        /* this should really be called only once but in case it wasn't called beforehand */
+        if (orbitingObjects == null) orbitingObjects = new GameObject[angles.Length];
+        if (orbitAngle == null) orbitAngle = new int[angles.Length];
+
         /* please load levels with length 3 */
         for (int i = 0; i < levels.Length; i++)
         {

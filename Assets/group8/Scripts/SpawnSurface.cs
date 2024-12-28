@@ -62,7 +62,7 @@ public class SpawnSurface : MonoBehaviour
         {
             Vector3 position = transform.rotation * localPosition + transform.position;
             var enemy = Instantiate(objectToSpawn, position, transform.rotation * Quaternion.Euler(-90,0,0));
-            enemy.transform.SetParent(transform);
+            enemy.transform.SetParent(transform.parent);
             
 
             

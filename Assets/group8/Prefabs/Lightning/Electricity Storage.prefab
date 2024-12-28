@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8594414100980553815}
   - component: {fileID: 6610124086777395267}
   m_Layer: 0
-  m_Name: ElectricityStorage
+  m_Name: Electricity Storage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

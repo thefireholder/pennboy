@@ -242,7 +242,7 @@ PrefabInstance:
     - target: {fileID: 5200767572506543117, guid: 3e64c930fdd764eaab10b9938d12e778,
         type: 3}
       propertyPath: m_Name
-      value: ElectricityStorage
+      value: Electricity Storage
       objectReference: {fileID: 0}
     - target: {fileID: 8594414100980553815, guid: 3e64c930fdd764eaab10b9938d12e778,
         type: 3}

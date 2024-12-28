@@ -182,6 +182,9 @@ public class Enemy : MonoBehaviour
             	if (IceStorage.Instance != null)
 	                IceStorage.Instance.EffectIce(gameObject);
 	            break;
+            case 7: // nuke type
+                DestroyAllEnemies();
+                break;
     		default:
     			TakeDamage(damage);
     			break;
@@ -287,6 +290,17 @@ public class Enemy : MonoBehaviour
                 // Destroy the child GameObject
                 Destroy(child.gameObject);
             }
+        }
+    }
+
+    void DestroyAllEnemies()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        // Log the names of all found enemies
+        foreach (GameObject enemy in enemies)
+        {
+            enemy.GetComponent<Enemy>().TakeDamage(9999);
         }
     }
 }

@@ -27,6 +27,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     int[] numberOfSpawnEnemy = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
 
+    private float maxPlayerPhaseLength = 60f;
     private float playerPhaseLength = 25f;
     private float bombPhaseLength = 10f;
     private float enemyPhaseLength = 2f;
@@ -162,7 +163,8 @@ public class WaveManager : MonoBehaviour
             scoreText.text = "Score: " + score.ToString();
             bombText.text = "MAX Bomb: " + nBomb + " / " + maximumBomb;
             timerText.text = "Time: " + timerValue.ToString();
-            maxBombCanvasImage.sprite = maxBombSprites[nBomb];
+            if (maxBombSprites.Length != 0)
+                maxBombCanvasImage.sprite = maxBombSprites[nBomb];
         }
 
         if (enemyReachingPlane != null)
@@ -201,6 +203,7 @@ public class WaveManager : MonoBehaviour
 
         // increase player phase length by set amount
         playerPhaseLength += (waveNumber - 1) * 3;
+        playerPhaseLength = Mathf.Min(playerPhaseLength, maxPlayerPhaseLength);
 
         // activate hand if it exists
         if (hand != null) hand.activateHand(true);

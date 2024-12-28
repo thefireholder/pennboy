@@ -25,15 +25,15 @@ public class IceStorage : MonoBehaviour
         {
             Destroy(gameObject); // Destroy this object if an instance already exists
         }
-
     }
 
     public void EffectIce(GameObject enemy)
     {
-        Debug.Log("Effect Ice triggered");
+        //Debug.Log("Effect Ice triggered");
+        enemy.GetComponent<Enemy>().RemoveAllVFX();
         GenerateIceIcosahedron(enemy.transform);
         GenerateVRX(enemy.transform);
-        Debug.Log("Effect Ice ended");
+        //Debug.Log("Effect Ice ended");
 
         // damage on Enemies
         enemy.GetComponent<Enemy>().iceFreeze(3);
@@ -43,6 +43,7 @@ public class IceStorage : MonoBehaviour
     void GenerateIceIcosahedron(Transform target)
     {
         GameObject iceEncasingObject = new GameObject("Ice Encasing");
+        iceEncasingObject.tag = "VFX";
         iceEncasingObject.transform.SetParent(target);
         MeshFilter meshFilter = iceEncasingObject.AddComponent<MeshFilter>();
         Mesh mesh = new Mesh();

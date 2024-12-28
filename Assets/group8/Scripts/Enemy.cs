@@ -35,7 +35,9 @@ public class Enemy : MonoBehaviour
 
     public string effectStatus = "normal";
     int freezeCounter = 0;
+    int enflameCounter = 0;
     public int freezeStatusDamage = 1;
+    public int enflamedStatusDamage = 1;
 
     private Rigidbody rb;
 
@@ -69,7 +71,22 @@ public class Enemy : MonoBehaviour
         {
             freezeCounter--;
             TakeDamage(freezeStatusDamage);
+            if (freezeCounter == 0 && !dead)
+            {
+                effectStatus = "normal";
+                RemoveAllVFX();
+            }
             return;
+        }
+        if (enflameCounter > 0)
+        {
+            enflameCounter--;
+            TakeDamage(enflamedStatusDamage);
+            if (enflameCounter == 0 && !dead)
+            {
+                effectStatus = "normal";
+                RemoveAllVFX();
+            }
         }
         // should climb up every wave
         float upMagnitude = (climbHeight + Random.Range(-1f, 1f) * variation);
@@ -108,6 +125,7 @@ public class Enemy : MonoBehaviour
     	}
     	burning = false;
     }
+
 
     public void DebugExplosionSphere(float radius){
     	GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere); 
@@ -152,6 +170,10 @@ public class Enemy : MonoBehaviour
                 }
                 StartCoroutine(burn);
                 break;
+            case 3: // Flame type
+                if (FlameStorage.Instance != null)
+                    FlameStorage.Instance.EffectFlame(gameObject);
+                break;
             case 4: // Electricity type
     			if (ElectricityStorage.Instance != null)
                 	ElectricityStorage.Instance.EffectElectricity(gameObject);
@@ -171,6 +193,15 @@ public class Enemy : MonoBehaviour
     {
         effectStatus = "freeze";
         freezeCounter = count;
+        enflameCounter = 0;
+    }
+
+
+    public void flameBurn(int count=3)
+    {
+        effectStatus = "enflamed";
+        freezeCounter = 0;
+        enflameCounter = count;
     }
 
     public void FlyAway()
@@ -244,6 +275,19 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
 
+    }
+
+    public void RemoveAllVFX()
+    {
+        foreach (Transform child in transform)
+        {
+            // Check if the child has the specified tag
+            if (child.CompareTag("VFX"))
+            {
+                // Destroy the child GameObject
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
         // it seems its possible to access destroyed enemy due to race condition, hence this delay

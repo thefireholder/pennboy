@@ -45,8 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9538ade115eaa48f3acbee365c6c84dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrownObject: {fileID: 6597882995429004002, guid: 239356ef7454e4b38bb604748c057d56,
+  thrownBomb: {fileID: 6597882995429004002, guid: 239356ef7454e4b38bb604748c057d56,
     type: 3}
+  thrownFleshBomb: {fileID: 1773364146057686765, guid: d563c519893b247f8b1832eeed781635,
+    type: 3}
+  thrownMagmaBomb: {fileID: 6597882995429004002, guid: a2599e726e4c7400fad4193f97c2a643,
+    type: 3}
+  orbitingBombsPallete: {fileID: 0}
   lineRenderer: {fileID: 5226909199366947816}
   timeOfTheFlight: 2
   trajectoryDepthLimit: 0
@@ -54,10 +59,15 @@ MonoBehaviour:
   defaultMagnitude: 7
   angleControlScale: 20
   magControlScale: 100
+  maxAngle: 30.7
+  minAngle: 29.95
+  maxMag: 10.7
+  minMag: 6.75
+  rateBySeconds: 1
+  overrideTestBomb: -1
   angle: 30
   magnitude: 7
-  waveManager: {fileID: 1114669344436652584, guid: 60f0a4fab832a4e58b0cd4e2dd0514da,
-    type: 3}
+  handActive: 0
 --- !u!1001 &9180418672738848038
 PrefabInstance:
   m_ObjectHideFlags: 0

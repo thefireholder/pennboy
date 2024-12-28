@@ -3,12 +3,14 @@ using System.Collections;
 
 public class OrbitingBombs : MonoBehaviour
 {
-    public GameObject objectPrefab; // Prefab of the object to instantiate
+    public GameObject fakeBomb; // Prefab of the object to instantiate
+    public GameObject fakeFleshBomb; // Prefab of the object to instantiate
+    public GameObject fakeMagmaBomb; // Prefab of the object to instantiate
     public float[] angles;         // Angles to orbit
     public float[] speeds;         // Speeds for each arc segment
     public float[] bombSizes = new float[] { 1f, 1.5f, 2f, 2.5f, 3f, 3.3f, 3.6f, 3.9f, 4.3f };
     private float stdSize = 0.3f;
-    private float radius;          // Radius of the orbit (calculated from the cylinder's scale)
+    private float radius = 0.5f;          // Radius of the orbit (calculated from the cylinder's scale)
     private bool isOrbiting = false;  // To track if the objects are currently orbiting
 
     // Array to store references to instantiated objects
@@ -22,14 +24,6 @@ public class OrbitingBombs : MonoBehaviour
             Debug.LogError("The number of angles and speeds must be the same.");
             return;
         }
-
-        // Calculate the radius using the cylinder's local scale
-        radius = 0.5f;
-
-        // Initialize the array to store orbiting objects
-        orbitingObjects = new GameObject[angles.Length];
-        orbitAngle = new int[angles.Length];
-
     }
 
     public void SetUpPallette(int[] levels)
@@ -52,7 +46,14 @@ public class OrbitingBombs : MonoBehaviour
 
         // Instantiate the object only if it doesn't already exist
         // Instantiate the child object in the world space (without a parent initially)
-        GameObject child = Instantiate(objectPrefab, Vector3.zero, Quaternion.identity, transform);
+        GameObject child;
+        if (newBombLevel == 3)
+            child = Instantiate(fakeMagmaBomb, Vector3.zero, Quaternion.identity, transform);
+        else if (newBombLevel == 6)
+            child = Instantiate(fakeFleshBomb, Vector3.zero, Quaternion.identity, transform);
+        else
+            child = Instantiate(fakeBomb, Vector3.zero, Quaternion.identity, transform);
+
         FakeBomb bombProperty = child.GetComponent<FakeBomb>();
 
         bombProperty.level = newBombLevel;

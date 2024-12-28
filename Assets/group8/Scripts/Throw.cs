@@ -6,7 +6,9 @@ using UnityEngine;
 public class Throw : MonoBehaviour
 {
 
-    public GameObject thrownObject;
+    public GameObject thrownBomb;
+    public GameObject thrownFleshBomb;
+    public GameObject thrownMagmaBomb;
     public OrbitingBombs orbitingBombsPallete;
 
     public LineRenderer lineRenderer;
@@ -139,7 +141,13 @@ public class Throw : MonoBehaviour
     IEnumerator CreateBomb(Vector3 startPoint, Vector3 startVelocity, int level=0)
     {
         yield return new WaitForSeconds(0.2f);
-        var bomb = Instantiate(thrownObject, startPoint, Quaternion.Euler(0, 0, 30));
+        GameObject bomb;
+        if (level == 3)
+            bomb = Instantiate(thrownMagmaBomb, startPoint, Quaternion.Euler(0, 0, 30));
+        else if (level == 6)
+            bomb = Instantiate(thrownFleshBomb, startPoint, Quaternion.Euler(0, 0, 30));
+        else
+            bomb = Instantiate(thrownBomb, startPoint, Quaternion.Euler(0, 0, 30));
         Rigidbody rb = bomb.GetComponent<Rigidbody>();
         rb.velocity = startVelocity;
         bomb.GetComponent<Bomb>().level = level;
